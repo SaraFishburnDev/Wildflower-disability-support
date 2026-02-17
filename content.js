@@ -12,6 +12,7 @@
     testimonials: BASE + 'testimonials',
     team:         BASE + 'team',
     contact:      BASE + 'contact',
+    gallery:      BASE + 'gallery',
     cta:          BASE + 'cta',
     footer:       BASE + 'footer'
   };
@@ -454,6 +455,71 @@
     });
   }
 
+  // ─── Gallery ───
+
+  function renderGallery(config, items) {
+    // Section header
+    setIcon('gallery_label_icon', config.section_label_icon);
+    setText('gallery_label', config.section_label);
+    setHTML('gallery_heading', formatText(config.section_heading));
+    setHTML('gallery_subtitle', formatText(config.section_subtitle));
+
+    // Gallery slides
+    var container = document.getElementById('gallery_grid');
+    if (container) {
+      container.innerHTML = items.map(function (item) {
+        var imgUrl = extractImageUrl(item.image_url);
+        if (!imgUrl) return '';
+        var caption = item.caption || '';
+        var alt = item.alt || caption || 'Gallery image';
+        var captionHtml = caption
+          ? '<div class="gallery-slide-caption">' + caption + '</div>'
+          : '';
+        return (
+          '<li class="splide__slide">' +
+            '<div class="gallery-slide">' +
+              '<a href="' + imgUrl + '" data-fancybox="gallery"' +
+                (caption ? ' data-caption="' + caption.replace(/"/g, '&quot;') + '"' : '') + '>' +
+                '<img src="' + imgUrl + '" alt="' + alt.replace(/"/g, '&quot;') + '" loading="lazy">' +
+              '</a>' +
+              captionHtml +
+            '</div>' +
+          '</li>'
+        );
+      }).filter(Boolean).join('');
+    }
+
+    // Initialise Splide
+    if (typeof Splide !== 'undefined') {
+      new Splide('#gallerySplide', {
+        type: 'loop',
+        perPage: 3,
+        gap: '1.5rem',
+        autoplay: true,
+        interval: 5000,
+        pauseOnHover: true,
+        pagination: true,
+        breakpoints: {
+          991: { perPage: 2 },
+          575: { perPage: 1 }
+        }
+      }).mount();
+    }
+
+    // Bind Fancybox
+    Fancybox.bind('[data-fancybox="gallery"]', {
+      mainClass: 'gallery-fancybox',
+      Thumbs: { type: 'classic' },
+      Toolbar: {
+        display: {
+          left: [],
+          middle: [],
+          right: ['close']
+        }
+      }
+    });
+  }
+
   // ─── Contact ───
 
   function renderContact(data) {
@@ -522,6 +588,7 @@
     setAttr('footer_facebook', 'href', d.facebook);
     setAttr('nav_facebook', 'href', d.facebook);
     setAttr('menu_facebook', 'href', d.facebook);
+    setAttr('gallery_facebook', 'href', d.facebook);
   }
 
   // ─── Load All Content ───
@@ -534,6 +601,7 @@
     fetchMixedCSV(DATA_SOURCES.services).then(function (d) { contentData.services = d; }),
     fetchMixedCSV(DATA_SOURCES.testimonials).then(function (d) { contentData.testimonials = d; }),
     fetchMixedCSV(DATA_SOURCES.team).then(function (d) { contentData.team = d; }),
+    fetchMixedCSV(DATA_SOURCES.gallery).then(function (d) { contentData.gallery = d; }),
     fetchCSV(DATA_SOURCES.contact).then(function (d) { contentData.contact = d; }),
     fetchCSV(DATA_SOURCES.cta).then(function (d) { contentData.cta = d; }),
     fetchCSV(DATA_SOURCES.footer).then(function (d) { contentData.footer = d; })
@@ -546,6 +614,7 @@
       renderServices(contentData.services.config, contentData.services.items);
       renderTestimonials(contentData.testimonials.config, contentData.testimonials.items);
       renderTeam(contentData.team.config, contentData.team.items);
+      renderGallery(contentData.gallery.config, contentData.gallery.items);
       renderContact(contentData.contact);
       renderCTA(contentData.cta, contactKV.phone);
       renderFooter(contentData.footer);

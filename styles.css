@@ -245,17 +245,19 @@ body:has(.menu-container.open) {
     background-size: cover;
     background-position: center;
     color: #fff;
-    overflow: hidden;
+    position: relative;
+    z-index: 2;
 }
 .hero::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -20px;
     left: 0;
     right: 0;
-    height: 80px;
-    background: var(--clr-warm-bg);
+    height: 50px;
+    background: #fff;
     clip-path: ellipse(55% 100% at 50% 100%);
+    z-index: 3;
 }
 .hero-content {
     position: relative;
@@ -417,6 +419,8 @@ body:has(.menu-container.open) {
 /* ─── Who We Are ─── */
 #who-we-are {
     background: #fff;
+    position: relative;
+    z-index: 1;
 }
 .about-gallery {
     display: grid;
@@ -489,6 +493,11 @@ body:has(.menu-container.open) {
 }
 
 /* ─── Services ─── */
+#services {
+    position: relative;
+    z-index: 1;
+}
+
 .service-card {
     display: block;
     background: #fff;
@@ -553,26 +562,29 @@ body:has(.menu-container.open) {
         linear-gradient(135deg, var(--clr-primary-dark), var(--clr-primary));
     color: #fff;
     position: relative;
+    z-index: 2;
 }
 .testimonial-section::before {
     content: '';
     position: absolute;
-    top: -2px;
+    top: -16px;
     left: 0;
     right: 0;
-    height: 60px;
+    height: 40px;
     background: var(--clr-warm-bg);
     clip-path: ellipse(55% 100% at 50% 0%);
+    z-index: 3;
 }
 .testimonial-section::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -16px;
     left: 0;
     right: 0;
-    height: 60px;
-    background: #fff;
+    height: 40px;
+    background: var(--clr-warm-bg);
     clip-path: ellipse(55% 100% at 50% 100%);
+    z-index: 3;
 }
 .testimonial-card {
     background: rgba(255,255,255,0.12);
@@ -640,6 +652,10 @@ body:has(.menu-container.open) {
 }
 
 /* ─── Meet the Team ─── */
+#team {
+    position: relative;
+    z-index: 1;
+}
 .team-card {
     background: #fff;
     border-radius: 16px;
@@ -774,6 +790,88 @@ body:has(.menu-container.open) {
     .team-modal-body {
         overflow: visible;
     }
+}
+
+/* ─── Gallery Section ─── */
+.gallery-section {
+    background: var(--clr-warm-bg);
+}
+#gallerySplide {
+    padding: 0 3.5rem;
+}
+.gallery-slide {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.04);
+}
+.gallery-slide a {
+    display: block;
+    cursor: pointer;
+    overflow: hidden;
+}
+.gallery-slide img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+.gallery-slide:hover img {
+    transform: scale(1.05);
+}
+.gallery-slide-caption {
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--clr-text-muted);
+    text-align: center;
+}
+#gallerySplide .splide__arrow {
+    background: var(--clr-primary);
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+    transition: background 0.2s;
+}
+#gallerySplide .splide__arrow:hover {
+    background: var(--clr-primary-dark);
+}
+#gallerySplide .splide__arrow:disabled {
+    display: none;
+}
+#gallerySplide .splide__arrow svg {
+    fill: #fff;
+    width: 18px;
+    height: 18px;
+}
+#gallerySplide .splide__arrow--prev {
+    left: 0;
+}
+#gallerySplide .splide__arrow--next {
+    right: 0;
+}
+#gallerySplide .splide__pagination {
+    bottom: -2rem;
+}
+#gallerySplide .splide__pagination__page {
+    background: var(--clr-primary);
+    opacity: 0.3;
+    width: 10px;
+    height: 10px;
+}
+#gallerySplide .splide__pagination__page.is-active {
+    opacity: 1;
+    transform: scale(1.2);
+}
+@media (max-width: 575px) {
+    #gallerySplide { padding: 0 2.5rem; }
+}
+
+/* ─── Gallery Fancybox ─── */
+.gallery-fancybox .fancybox__backdrop {
+    background: rgba(61, 92, 61, 0.9);
 }
 
 /* ─── Contact Section ─── */
