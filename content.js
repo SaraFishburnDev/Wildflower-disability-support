@@ -19,6 +19,13 @@
 
   // ─── Helpers ───
 
+  // Google Sheets CSV export pads rows with trailing empty columns ("","",…).
+  // PapaParse's header-dedup logic chokes on many duplicate "" headers and
+  // swallows the first data row into a mangled header string.  Strip them.
+  function stripTrailingEmptyCols(text) {
+    return text.replace(/(?:,"")+$/gm, '');
+  }
+
   var PAPA_OPTS = {
     header: true,
     skipEmptyLines: true,
@@ -33,7 +40,7 @@
         return r.text();
       })
       .then(function (text) {
-        return Papa.parse(text, PAPA_OPTS).data;
+        return Papa.parse(stripTrailingEmptyCols(text), PAPA_OPTS).data;
       });
   }
 
