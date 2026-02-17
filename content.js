@@ -468,6 +468,7 @@
     setText('footer_abn', d.abn);
     setAttr('footer_facebook', 'href', d.facebook);
     setAttr('nav_facebook', 'href', d.facebook);
+    setAttr('menu_facebook', 'href', d.facebook);
   }
 
   // ─── Load All Content ───

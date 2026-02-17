@@ -40,35 +40,57 @@
       <span class="navbar-brand">
         <img src="logo.png" alt="Wildflower Disability Support Services logo">
       </span>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-        aria-controls="mainNav" aria-expanded="false" aria-label="Open navigation menu">
+      <!-- Desktop nav -->
+      <ul class="navbar-nav ms-auto align-items-center gap-1 d-none d-lg-flex flex-row">
+        <li class="nav-item"><a class="nav-link" href="#who-we-are">Who We Are</a></li>
+        <li class="nav-item"><a class="nav-link" href="#services">Our Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="#team">Our Team</a></li>
+        <li class="nav-item ms-2">
+          <a class="nav-link nav-cta" href="#contact">Contact</a>
+        </li>
+        <li class="nav-item ms-1">
+          <a class="nav-link nav-social" id="nav_facebook" href="https://facebook.com" target="_blank"
+            rel="noopener noreferrer" aria-label="Visit us on Facebook">
+            <i class="bi bi-facebook" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+      <!-- Mobile: contact button + menu toggler -->
+      <a class="nav-link nav-cta d-lg-none ms-auto me-2" href="#contact" id="mobileContactBtn">Contact</a>
+      <button class="navbar-toggler d-lg-none" type="button" id="openMenu"
+        aria-haspopup="menu" aria-controls="menuContainer" aria-expanded="false"
+        aria-label="Open navigation menu">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
-          <li class="nav-item">
-            <a class="nav-link" href="#who-we-are">Who We Are</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#services">Our Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#team">Our Team</a>
-          </li>
-          <li class="nav-item ms-lg-2">
-            <a class="nav-link nav-cta" href="#contact">
-              Contact
-            </a>
-          </li>
-          <li class="nav-item ms-lg-1">
-            <a class="nav-link nav-social" id="nav_facebook" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Visit us on Facebook">
-              <i class="bi bi-facebook" aria-hidden="true"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
   </nav>
+
+  <!-- Menu overlay -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- Mobile menu -->
+  <div id="menuContainer" class="menu-container" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="menu-header">
+      <span class="navbar-brand">
+        <img src="logo.png" alt="Wildflower Disability Support Services logo">
+      </span>
+      <button id="closeMenu" class="menu-close-btn" aria-label="Close navigation menu">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+    <ul class="menu-nav">
+      <li><a class="menu-link" href="#who-we-are">Who We Are</a></li>
+      <li><a class="menu-link" href="#services">Our Services</a></li>
+      <li><a class="menu-link" href="#team">Our Team</a></li>
+      <li><a class="menu-link" href="#contact">Contact</a></li>
+      <li>
+        <a class="menu-link menu-link-social" id="menu_facebook" href="https://facebook.com" target="_blank"
+          rel="noopener noreferrer">
+          <i class="bi bi-facebook" aria-hidden="true"></i> Facebook
+        </a>
+      </li>
+    </ul>
+  </div>
 
   <!-- ═══════════ HERO ═══════════ -->
   <header class="hero" id="top" role="banner">

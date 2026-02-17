@@ -88,16 +88,87 @@ function updateActiveNav() {
 }
 window.addEventListener('scroll', updateActiveNav);
 
-// ─── Close mobile nav on link click ───
-const navCollapse = document.getElementById('mainNav');
-const bsCollapse = new bootstrap.Collapse(navCollapse, { toggle: false });
-document.querySelectorAll('#mainNav .nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        if (window.innerWidth < 992) {
-            bsCollapse.hide();
+// ─── Custom Mobile Menu ───
+const menuContainer = document.getElementById('menuContainer');
+const menuOverlay = document.getElementById('menuOverlay');
+const openMenuBtn = document.getElementById('openMenu');
+const closeMenuBtn = document.getElementById('closeMenu');
+
+const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+let focusableEls = [], firstFocusable = null, lastFocusable = null;
+
+function openMenu() {
+    menuContainer.classList.add('open');
+    menuOverlay.style.display = 'block';
+    requestAnimationFrame(() => { menuOverlay.style.opacity = '1'; });
+    openMenuBtn.setAttribute('aria-expanded', 'true');
+
+    focusableEls = [...menuContainer.querySelectorAll(focusableSelector)];
+    firstFocusable = focusableEls[0];
+    lastFocusable = focusableEls[focusableEls.length - 1];
+    if (firstFocusable) firstFocusable.focus();
+}
+
+function closeMenu(returnFocus) {
+    menuContainer.classList.remove('open');
+    menuOverlay.style.opacity = '0';
+    setTimeout(() => { menuOverlay.style.display = 'none'; }, 300);
+    openMenuBtn.setAttribute('aria-expanded', 'false');
+    if (returnFocus !== false) openMenuBtn.focus();
+}
+
+openMenuBtn.addEventListener('click', openMenu);
+closeMenuBtn.addEventListener('click', () => closeMenu());
+menuOverlay.addEventListener('click', () => closeMenu());
+
+menuContainer.addEventListener('keydown', (e) => {
+    if (!menuContainer.classList.contains('open')) return;
+
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMenu();
+        return;
+    }
+
+    if (e.key === 'Tab' && focusableEls.length > 1) {
+        if (e.shiftKey && document.activeElement === firstFocusable) {
+            e.preventDefault();
+            lastFocusable.focus();
+        } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+            e.preventDefault();
+            firstFocusable.focus();
+        }
+    }
+});
+
+// Close menu & instant scroll on menu link click
+document.querySelectorAll('#menuContainer .menu-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            e.preventDefault();
+            closeMenu(false);
+            const target = document.querySelector(href);
+            if (target) {
+                window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
+            }
         }
     });
 });
+
+// ─── Mobile header contact button instant scroll ───
+const mobileContactBtn = document.getElementById('mobileContactBtn');
+if (mobileContactBtn) {
+    mobileContactBtn.addEventListener('click', (e) => {
+        if (window.innerWidth < 992) {
+            e.preventDefault();
+            const target = document.querySelector('#contact');
+            if (target) {
+                window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
+            }
+        }
+    });
+}
 
 // ─── Dynamic Content Initialization ───
 // Called by content.js after CSV content has been rendered into the DOM
