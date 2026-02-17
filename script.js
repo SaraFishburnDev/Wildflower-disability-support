@@ -99,27 +99,32 @@ document.querySelectorAll('#mainNav .nav-link').forEach(link => {
     });
 });
 
-// ─── Fade-up Animation on Scroll ───
-const fadeElements = document.querySelectorAll('.fade-up');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-        }
+// ─── Dynamic Content Initialization ───
+// Called by content.js after CSV content has been rendered into the DOM
+window.initDynamicContent = function() {
+    // Fade-up Animation on Scroll
+    const fadeElements = document.querySelectorAll('.fade-up:not(.observed)');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    fadeElements.forEach(el => {
+        el.classList.add('observed');
+        observer.observe(el);
     });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-fadeElements.forEach(el => observer.observe(el));
+    // Service Enquiry Links
+    function checkService(value) {
+        const cb = document.getElementById(`service-${value}`);
+        if (cb) cb.checked = true;
+    }
 
-// ─── Service Enquiry Links ───
-function checkService(value) {
-    const cb = document.getElementById(`service-${value}`);
-    if (cb) cb.checked = true;
-}
-
-// Handle ?service= URL param on page load
-(() => {
+    // Handle ?service= URL param on page load
     const params = new URLSearchParams(window.location.search);
     const service = params.get('service');
     if (service) {
@@ -128,21 +133,21 @@ function checkService(value) {
             document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
         }, 100);
     }
-})();
 
-// Intercept enquire links so they don't cause a full page reload
-document.querySelectorAll('a.service-card[href*="?service="]').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const url = new URL(link.href);
-        const service = url.searchParams.get('service');
-        if (service) {
-            checkService(service);
-            history.replaceState(null, '', `?service=${service}#contact`);
-        }
-        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    // Intercept enquire links so they don't cause a full page reload
+    document.querySelectorAll('a.service-card[href*="?service="]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = new URL(link.href);
+            const svc = url.searchParams.get('service');
+            if (svc) {
+                checkService(svc);
+                history.replaceState(null, '', `?service=${svc}#contact`);
+            }
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        });
     });
-});
+};
 
 // ─── Form Validation & Submission ───
 const form = document.getElementById('contactForm');

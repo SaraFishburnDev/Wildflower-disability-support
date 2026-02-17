@@ -868,6 +868,29 @@ footer .footer-bottom {
     .contact-info-card { padding: 28px 20px; }
 }
 
+/* ─── Skeleton Loading ─── */
+.skeleton-text,
+.skeleton-card,
+.skeleton-value,
+.skeleton-testimonial,
+.skeleton-team {
+    background: #e9ecef;
+    border-radius: var(--radius);
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+.skeleton-text { border-radius: 8px; }
+.skeleton-card { height: 280px; }
+.skeleton-value { height: 100px; }
+.skeleton-testimonial {
+    background: rgba(255,255,255,0.08);
+    height: 240px;
+}
+.skeleton-team { height: 400px; }
+@keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.3; }
+}
+
 /* ─── Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
