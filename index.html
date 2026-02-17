@@ -27,8 +27,9 @@
 </head>
 
 <body>
+  <script>document.body.classList.add('js');</script>
   <!-- Loading Screen -->
-  <div class="loading-screen" id="loadingScreen">
+  <div class="loading-screen" id="loadingScreen" role="status" aria-live="polite" aria-label="Loading page content">
     <img src="footer_logo.svg" alt="Wildflower Disability Support Services">
   </div>
 
@@ -121,7 +122,7 @@
   <main id="main-content">
 
     <!-- ═══════════ WHO WE ARE ═══════════ -->
-    <section id="who-we-are" class="section" aria-labelledby="about-heading">
+    <section id="who-we-are" class="section" aria-labelledby="about_heading">
       <div class="container">
         <div class="row align-items-start gy-5">
           <div class="col-lg-6 fade-up">
@@ -155,7 +156,7 @@
     </section>
 
     <!-- ═══════════ SERVICES ═══════════ -->
-    <section id="services" class="section" aria-labelledby="services-heading">
+    <section id="services" class="section" aria-labelledby="services_heading">
       <div class="container">
         <div class="text-center mb-5 fade-up">
           <span class="section-label">
@@ -173,7 +174,7 @@
     </section>
 
     <!-- ═══════════ TESTIMONIALS ═══════════ -->
-    <section class="testimonial-section section" aria-labelledby="testimonial-heading">
+    <section class="testimonial-section section" aria-labelledby="testimonials_heading">
       <div class="container position-relative py-4" style="z-index:2;">
         <div class="text-center mb-5 fade-up">
           <span class="section-label" style="color:rgba(255,255,255,0.8)">
@@ -193,7 +194,7 @@
     </section>
 
     <!-- ═══════════ MEET THE TEAM ═══════════ -->
-    <section id="team" class="section" aria-labelledby="team-heading">
+    <section id="team" class="section" aria-labelledby="team_heading">
       <div class="container">
         <div class="text-center mb-5 fade-up">
           <span class="section-label">
@@ -211,7 +212,7 @@
     </section>
 
     <!-- ═══════════ GALLERY ═══════════ -->
-    <section id="gallery" class="section gallery-section" aria-labelledby="gallery-heading">
+    <section id="gallery" class="section gallery-section" aria-labelledby="gallery_heading">
       <div class="container">
         <div class="text-center mb-5 fade-up">
           <span class="section-label">
@@ -237,7 +238,7 @@
     </section>
 
     <!-- ═══════════ CONTACT ═══════════ -->
-    <section id="contact" class="section" aria-labelledby="contact-heading">
+    <section id="contact" class="section" aria-labelledby="contact_heading">
       <div class="container">
         <div class="text-center mb-5 fade-up">
           <span class="section-label">
@@ -259,14 +260,14 @@
                 <div class="contact-detail-icon"><i class="bi bi-telephone" aria-hidden="true"></i></div>
                 <div class="contact-detail-text">
                   <strong>Phone</strong>
-                  <a id="contact_phone"></a>
+                  <a id="contact_phone" href="#contact">Phone number loading...</a>
                 </div>
               </div>
               <div class="contact-detail">
                 <div class="contact-detail-icon"><i class="bi bi-envelope" aria-hidden="true"></i></div>
                 <div class="contact-detail-text">
                   <strong>Email</strong>
-                  <a id="contact_email"></a>
+                  <a id="contact_email" href="#contact">Email loading...</a>
                 </div>
               </div>
               <div class="contact-detail">
@@ -288,6 +289,7 @@
           <div class="col-lg-7 fade-up delay-2">
             <div class="contact-form-card">
               <form id="contactForm" novalidate aria-label="Contact form">
+                <p class="form-required-note"><span aria-hidden="true">*</span> indicates a required field</p>
                 <div class="row g-3">
                   <div class="col-sm-6">
                     <label for="firstName" class="form-label">First Name <span style="color:#c0392b"
@@ -353,7 +355,7 @@
               </form>
 
               <!-- Success Message -->
-              <div class="form-success" id="formSuccess" role="alert">
+              <div class="form-success" id="formSuccess" role="status" aria-live="polite" tabindex="-1">
                 <div class="success-icon"><i class="bi bi-check-lg"></i></div>
                 <h3>Thank You!</h3>
                 <p>Your message has been sent successfully. Our team will be in touch within one business day.</p>
@@ -402,9 +404,9 @@
             <div class="col-sm-6 col-lg-2">
               <h5>Contact</h5>
               <ul class="list-unstyled footer-links">
-                <li><a id="footer_phone"></a></li>
-                <li><a id="footer_email">Email Us</a></li>
-                <li><a id="footer_facebook" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook" aria-hidden="true"></i> Facebook</a></li>
+                <li><a id="footer_phone" href="#contact">Phone</a></li>
+                <li><a id="footer_email" href="#contact">Email Us</a></li>
+                <li><a id="footer_facebook" href="#" target="_blank" rel="noopener noreferrer" aria-label="Visit us on Facebook"><i class="bi bi-facebook" aria-hidden="true"></i> Facebook</a></li>
               </ul>
             </div>
           </div>

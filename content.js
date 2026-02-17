@@ -348,17 +348,18 @@
         var starCount = parseInt(t.stars) || 5;
         var stars = '';
         for (var s = 0; s < starCount; s++) {
-          stars += '<i class="bi bi-star-fill"></i>';
+          stars += '<i class="bi bi-star-fill" aria-hidden="true"></i>';
         }
         return (
           '<li class="splide__slide">' +
             '<div class="testimonial-card text-center">' +
-              '<div class="stars" aria-label="' + starCount + ' out of 5 stars">' +
+              '<div class="stars" role="img" aria-label="' + starCount + ' out of 5 stars">' +
                 stars +
               '</div>' +
-              '<blockquote>\u201c' + formatText(t.quote) + '\u201d</blockquote>' +
-              '<div class="author">' + t.author + '</div>' +
-              '<div class="author-role">' + t.role + '</div>' +
+              '<blockquote>\u201c' + formatText(t.quote) + '\u201d' +
+                '<div role="contentinfo" class="mt-3"><cite class="author">' + t.author + '</cite>' +
+                '<span class="author-role">' + t.role + '</span></div>' +
+              '</blockquote>' +
             '</div>' +
           '</li>'
         );

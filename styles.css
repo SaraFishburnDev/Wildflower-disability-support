@@ -4,15 +4,15 @@
     --clr-primary: #5a7a5a;
     --clr-primary-dark: #3d5c3d;
     --clr-primary-light: #eef3eb;
-    --clr-accent: #d4883e;
-    --clr-accent-hover: #b8722f;
+    --clr-accent: #c27a30;
+    --clr-accent-hover: #a86520;
     --clr-warm-bg: #f9f6f1;
     --clr-warm-card: #ffffff;
     --clr-text: #2d3436;
     --clr-text-muted: #555e60;
     --clr-hero-overlay: rgba(61, 92, 61, 0.82);
     --clr-pink: #E49A95;
-    --clr-pink-dark: #c97b76;
+    --clr-pink-dark: #a5625d;
     --clr-pink-light: #faf0ef;
     --font-heading: 'Lora', Georgia, serif;
     --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
@@ -667,13 +667,19 @@ body:has(.menu-container.open) .navbar-island {
     line-height: 1.8;
     margin-bottom: 20px;
 }
+.testimonial-card blockquote [role="contentinfo"] {
+    font-style: normal;
+}
 .testimonial-card .author {
     font-weight: 700;
     font-size: 1rem;
+    font-style: normal;
+    display: block;
 }
 .testimonial-card .author-role {
     opacity: 0.8;
     font-size: 0.9rem;
+    display: block;
 }
 
 /* Testimonial Splide Carousel */
@@ -1005,6 +1011,15 @@ body:has(.menu-container.open) .navbar-island {
 }
 
 /* ─── Form Styles ─── */
+.form-required-note {
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+    margin-bottom: 16px;
+}
+.form-required-note span {
+    color: #c0392b;
+    font-weight: 700;
+}
 .contact-form-card {
     background: var(--clr-warm-bg);
     border-radius: 20px;
@@ -1233,20 +1248,24 @@ footer .footer-bottom {
 
 /* ─── Animations ─── */
 .fade-up {
+    opacity: 1;
+    transform: none;
+}
+.js .fade-up {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.fade-up.visible {
+.js .fade-up.visible {
     opacity: 1;
     transform: translateY(0);
 }
-.fade-up.delay-1 { transition-delay: 0.1s; }
-.fade-up.delay-2 { transition-delay: 0.2s; }
-.fade-up.delay-3 { transition-delay: 0.3s; }
-.fade-up.delay-4 { transition-delay: 0.4s; }
-.fade-up.delay-5 { transition-delay: 0.5s; }
-.fade-up.delay-6 { transition-delay: 0.6s; }
+.js .fade-up.delay-1 { transition-delay: 0.1s; }
+.js .fade-up.delay-2 { transition-delay: 0.2s; }
+.js .fade-up.delay-3 { transition-delay: 0.3s; }
+.js .fade-up.delay-4 { transition-delay: 0.4s; }
+.js .fade-up.delay-5 { transition-delay: 0.5s; }
+.js .fade-up.delay-6 { transition-delay: 0.6s; }
 
 /* ─── Responsive ─── */
 @media (max-width: 991px) {
