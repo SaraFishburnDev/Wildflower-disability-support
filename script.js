@@ -248,7 +248,6 @@ form.addEventListener('submit', function(e) {
 
     if (!form.checkValidity()) {
         form.classList.add('was-validated');
-        // Focus the first invalid field for accessibility
         const firstInvalid = form.querySelector(':invalid');
         if (firstInvalid) {
             firstInvalid.focus();
@@ -256,16 +255,34 @@ form.addEventListener('submit', function(e) {
         return;
     }
 
-    // Simulate submission
     const submitBtn = form.querySelector('.btn-submit');
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Sending...';
 
-    setTimeout(() => {
+    // Submit to Google Forms via fetch (no cookies, like curl)
+    const params = new URLSearchParams();
+    params.append('entry.1485367225', document.getElementById('firstName').value);
+    params.append('entry.50102404', document.getElementById('lastName').value);
+    params.append('entry.1058667171', document.getElementById('email').value);
+    params.append('entry.1235825412', document.getElementById('phone').value);
+    params.append('entry.1817018428', document.getElementById('message').value);
+
+    // Collect checked service labels to match Google Form option text
+    document.querySelectorAll('#serviceCheckboxes input[type="checkbox"]:checked').forEach(cb => {
+        const label = document.querySelector('label[for="' + cb.id + '"]');
+        if (label) params.append('entry.1659227597', label.textContent.trim());
+    });
+
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLSe9D0F7fN-FBGwx7EnUysipzedEHDWBbKJae9i1Kk9CjUrOsg/formResponse', {
+        method: 'POST',
+        mode: 'no-cors',
+        credentials: 'omit',
+        body: params
+    }).finally(() => {
         form.style.display = 'none';
         formSuccess.classList.add('show');
         formSuccess.focus();
-    }, 1200);
+    });
 });
 
 resetFormBtn.addEventListener('click', () => {
