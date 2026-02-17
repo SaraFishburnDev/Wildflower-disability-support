@@ -251,8 +251,8 @@
       }
       mobileContainer.appendChild(mobileRow);
       mobileContainer.classList.remove('d-none');
-      if (img2) renderImage('#aboutImg2Mobile', img2, 'Wildflower Disability Support Services', 'about-gallery');
-      if (img3) renderImage('#aboutImg3Mobile', img3, 'Wildflower Disability Support Services', 'about-gallery');
+      if (img2) renderImage('#aboutImg2Mobile', img2, 'Wildflower Disability Support Services');
+      if (img3) renderImage('#aboutImg3Mobile', img3, 'Wildflower Disability Support Services');
     }
 
     Fancybox.bind('[data-fancybox="about-gallery"]');

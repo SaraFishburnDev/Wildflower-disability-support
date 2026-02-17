@@ -783,6 +783,10 @@ body:has(.menu-container.open) .navbar-island {
 }
 
 /* ─── Team Modal (Fancybox) ─── */
+.fancybox__container {
+    z-index: 1070 !important;
+}
+
 .team-fancybox .fancybox__backdrop {
     background: rgba(61, 92, 61, 0.85);
 }
