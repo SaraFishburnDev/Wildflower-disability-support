@@ -400,12 +400,12 @@
           ? '<img src="' + photoUrl + '" alt="Photo of ' + member.name + '">'
           : '<i class="bi bi-person-fill" aria-hidden="true"></i>';
         return (
-          '<div class="col-md-6 col-lg-4 fade-up delay-' + (i + 1) + '">' +
+          '<div class="col-sm-6 col-lg-4 fade-up delay-' + (i + 1) + '">' +
             '<div class="team-card" role="button" tabindex="0" data-team-index="' + i + '" aria-label="Read more about ' + member.name + '">' +
               '<div class="team-photo" role="img" aria-label="Photo of ' + member.name + '">' +
                 photoHtml +
               '</div>' +
-              '<div class="team-info">' +
+              '<div class="team-info p-3 p-md-4">' +
                 '<h3>' + member.name + '</h3>' +
                 '<span class="team-role">' + member.role + '</span>' +
                 '<p>' + formatText(member.bio_short) + '</p>' +

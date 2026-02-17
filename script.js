@@ -1,5 +1,6 @@
 // ─── Navbar Scroll Effect ───
 const navbar = document.querySelector('.navbar');
+const logoWrapper = document.querySelector('.navbar-logo-wrapper');
 const backToTop = document.getElementById('backToTop');
 
 (() => {
@@ -26,6 +27,7 @@ const backToTop = document.getElementById('backToTop');
 
         // Scrolled shadow
         navbar.classList.toggle('scrolled', y > 50);
+        logoWrapper.classList.toggle('scrolled', y > 50);
 
         if (cooldown) return;
 
@@ -91,17 +93,26 @@ window.addEventListener('scroll', updateActiveNav);
 // ─── Custom Mobile Menu ───
 const menuContainer = document.getElementById('menuContainer');
 const menuOverlay = document.getElementById('menuOverlay');
-const openMenuBtn = document.getElementById('openMenu');
-const closeMenuBtn = document.getElementById('closeMenu');
+const menuToggleBtn = document.getElementById('menuToggle');
+const menuToggleLabel = menuToggleBtn.querySelector('.toggler-label');
+const navbarIsland = document.querySelector('.navbar-island');
 
 const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 let focusableEls = [], firstFocusable = null, lastFocusable = null;
 
 function openMenu() {
+    const container = navbarIsland.closest('.container');
+    const cs = getComputedStyle(container);
+    const containerWidth = container.offsetWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    menuContainer.style.width = containerWidth + 'px';
+    const openHeight = Math.min(menuContainer.scrollHeight, window.innerHeight - 24);
+    menuContainer.style.height = openHeight + 'px';
     menuContainer.classList.add('open');
+    menuToggleBtn.classList.add('active');
+    menuToggleLabel.textContent = 'CLOSE';
     menuOverlay.style.display = 'block';
     requestAnimationFrame(() => { menuOverlay.style.opacity = '1'; });
-    openMenuBtn.setAttribute('aria-expanded', 'true');
+    menuToggleBtn.setAttribute('aria-expanded', 'true');
 
     focusableEls = [...menuContainer.querySelectorAll(focusableSelector)];
     firstFocusable = focusableEls[0];
@@ -110,15 +121,22 @@ function openMenu() {
 }
 
 function closeMenu(returnFocus) {
+    menuContainer.style.width = '';
+    menuContainer.style.height = '';
     menuContainer.classList.remove('open');
+    menuToggleBtn.classList.remove('active');
+    menuToggleLabel.textContent = 'MENU';
     menuOverlay.style.opacity = '0';
-    setTimeout(() => { menuOverlay.style.display = 'none'; }, 300);
-    openMenuBtn.setAttribute('aria-expanded', 'false');
-    if (returnFocus !== false) openMenuBtn.focus();
+    setTimeout(() => { menuOverlay.style.display = 'none'; }, 400);
+    menuToggleBtn.setAttribute('aria-expanded', 'false');
+    if (returnFocus !== false) menuToggleBtn.focus();
 }
 
-openMenuBtn.addEventListener('click', openMenu);
-closeMenuBtn.addEventListener('click', () => closeMenu());
+function toggleMenu() {
+    menuContainer.classList.contains('open') ? closeMenu() : openMenu();
+}
+
+menuToggleBtn.addEventListener('click', toggleMenu);
 menuOverlay.addEventListener('click', () => closeMenu());
 
 menuContainer.addEventListener('keydown', (e) => {
