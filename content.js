@@ -352,7 +352,7 @@
         }
         return (
           '<li class="splide__slide">' +
-            '<div class="testimonial-card">' +
+            '<div class="testimonial-card text-center">' +
               '<div class="stars" aria-label="' + starCount + ' out of 5 stars">' +
                 stars +
               '</div>' +
@@ -567,9 +567,10 @@
     }
 
     var fe = document.getElementById('footer_email');
-    if (fe) fe.href = 'mailto:' + d.email;
-
-    setHTML('footer_area', formatText(d.area));
+    if (fe) {
+      fe.href = 'mailto:' + d.email;
+      fe.textContent = d.email;
+    }
   }
 
   // ─── CTA Banner ───
