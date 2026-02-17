@@ -197,6 +197,14 @@
     setHTML('hero_cta_secondary', d.cta_secondary);
     renderImage('.hero-img-placeholder', extractImageUrl(d.hero_image),
       'Wildflower Disability Support Services');
+
+    // Update meta description with live content if available
+    if (d.description) {
+      var plainDesc = d.description.replace(/\*\*(.+?)\*\*/g, '$1')
+        .replace(/\*(.+?)\*/g, '$1').replace(/\n/g, ' ').substring(0, 160);
+      var metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', plainDesc);
+    }
   }
 
   // ─── About + Values ───
