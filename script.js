@@ -185,7 +185,18 @@ document.querySelectorAll('#menuContainer .menu-link').forEach(link => {
             closeMenu(false);
             const target = document.querySelector(href);
             if (target) {
-                window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
+                // Re-trigger fade-in for the target section (respects reduced motion)
+                const prefersMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (prefersMotion) {
+                    const fadeEls = target.querySelectorAll('.fade-up.visible');
+                    fadeEls.forEach(el => el.classList.remove('visible'));
+                    window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
+                    requestAnimationFrame(() => {
+                        fadeEls.forEach(el => el.classList.add('visible'));
+                    });
+                } else {
+                    window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
+                }
             }
         }
     });
