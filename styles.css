@@ -11,8 +11,9 @@
     --clr-text: #2d3436;
     --clr-text-muted: #555e60;
     --clr-hero-overlay: rgba(61, 92, 61, 0.82);
-    --clr-pink: #d4a0a0;
-    --clr-pink-light: #f5eded;
+    --clr-pink: #E49A95;
+    --clr-pink-dark: #c97b76;
+    --clr-pink-light: #faf0ef;
     --font-heading: 'Lora', Georgia, serif;
     --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
     --radius: 12px;
@@ -156,7 +157,7 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     background:
         linear-gradient(135deg, rgba(61, 92, 61, 0.88), rgba(90, 122, 90, 0.78)),
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect fill="%235a7a5a" width="600" height="600"/><circle cx="150" cy="150" r="300" fill="%233d5c3d" opacity="0.3"/><circle cx="500" cy="400" r="250" fill="%23d4883e" opacity="0.1"/></svg>');
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect fill="%235a7a5a" width="600" height="600"/><circle cx="150" cy="150" r="300" fill="%233d5c3d" opacity="0.3"/><circle cx="500" cy="400" r="250" fill="%23E49A95" opacity="0.12"/></svg>');
     background-size: cover;
     background-position: center;
     color: #fff;
@@ -193,8 +194,8 @@ h1, h2, h3, h4, h5 {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(228, 154, 149, 0.2);
+    border: 1px solid rgba(228, 154, 149, 0.4);
     border-radius: 50px;
     padding: 8px 20px;
     font-size: 0.9rem;
@@ -399,6 +400,7 @@ h1, h2, h3, h4, h5 {
 .service-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
+    border-color: var(--clr-pink);
 }
 .service-icon {
     width: 72px;
@@ -433,10 +435,9 @@ h1, h2, h3, h4, h5 {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transition: gap var(--transition);
+    transition: gap var(--transition), color var(--transition);
 }
-.service-link:hover,
-.service-link:focus {
+.service-card:hover .service-link {
     color: var(--clr-primary-dark);
     gap: 10px;
 }
@@ -476,7 +477,7 @@ h1, h2, h3, h4, h5 {
     backdrop-filter: blur(8px);
 }
 .testimonial-card .stars {
-    color: var(--clr-accent);
+    color: var(--clr-pink);
     font-size: 1.2rem;
     margin-bottom: 16px;
 }
@@ -537,7 +538,7 @@ h1, h2, h3, h4, h5 {
     display: inline-block;
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--clr-accent);
+    color: var(--clr-pink-dark);
     margin-bottom: 12px;
 }
 .team-info p {
@@ -663,8 +664,8 @@ h1, h2, h3, h4, h5 {
     border: 2px solid #ccc;
 }
 .form-check-input:checked {
-    background-color: var(--clr-primary);
-    border-color: var(--clr-primary);
+    background-color: var(--clr-pink);
+    border-color: var(--clr-pink);
 }
 .form-check-label {
     font-size: 0.95rem;
