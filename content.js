@@ -3,12 +3,11 @@
 
   // ─── Configuration ───
   var SHEET_ID = '1AtkWq2Mr6c9MbNRRpxxgQXD550Vk1JhvWh4ghdw6-Cs';
-  var BASE = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=';
+  var BASE = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&headers=1&sheet=';
 
   var DATA_SOURCES = {
     hero:         BASE + 'hero',
     about:        BASE + 'about',
-    values:       BASE + 'values',
     services:     BASE + 'services',
     testimonials: BASE + 'testimonials',
     team:         BASE + 'team',
@@ -19,6 +18,13 @@
 
   // ─── Helpers ───
 
+  var PAPA_OPTS = {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: function (h) { return h.trim(); },
+    transform: function (v) { return v.trim(); }
+  };
+
   function fetchCSV(url) {
     return fetch(url)
       .then(function (r) {
@@ -26,19 +32,101 @@
         return r.text();
       })
       .then(function (text) {
-        return Papa.parse(text, {
-          header: true,
+        return Papa.parse(text, PAPA_OPTS).data;
+      });
+  }
+
+  /**
+   * Fetch a sheet that contains a key-value config section at the top,
+   * a "---" separator row, then a data table below.
+   * Returns { config: {key: value, ...}, items: [{col: val, ...}, ...] }
+   */
+  function fetchMixedCSV(url) {
+    return fetch(url)
+      .then(function (r) {
+        if (!r.ok) throw new Error('Failed to load ' + url);
+        return r.text();
+      })
+      .then(function (text) {
+        // Parse without headers first so PapaParse handles quoted
+        // multi-line fields correctly (text.split('\n') cannot).
+        var raw = Papa.parse(text, {
+          header: false,
           skipEmptyLines: true,
-          transformHeader: function (h) { return h.trim(); },
           transform: function (v) { return v.trim(); }
         }).data;
+
+        // Find the separator row (first cell is "---")
+        var sepIdx = -1;
+        for (var i = 0; i < raw.length; i++) {
+          if (raw[i][0] === '---') { sepIdx = i; break; }
+        }
+
+        if (sepIdx === -1) {
+          // No separator — treat entire sheet as a plain table
+          return { config: {}, items: Papa.parse(text, PAPA_OPTS).data };
+        }
+
+        // Config section: row 0 is headers, rows 1..sepIdx-1 are data
+        var configHeaders = raw[0];
+        var config = {};
+        for (var c = 1; c < sepIdx; c++) {
+          var k = raw[c][configHeaders.indexOf('key')] || raw[c][0];
+          var v = raw[c][configHeaders.indexOf('value')] || raw[c][1] || '';
+          if (k) config[k] = v;
+        }
+
+        // Data section: row after separator is a heading label (skip),
+        // next row is column headers, rest is data
+        var dataHeaders = raw[sepIdx + 2] || [];
+        var items = [];
+        for (var d = sepIdx + 3; d < raw.length; d++) {
+          var obj = {};
+          for (var h = 0; h < dataHeaders.length; h++) {
+            if (dataHeaders[h]) obj[dataHeaders[h]] = raw[d][h] || '';
+          }
+          items.push(obj);
+        }
+
+        return { config: config, items: items };
       });
   }
 
   function toKeyValue(rows) {
     var obj = {};
-    rows.forEach(function (row) { obj[row.key] = row.value; });
+    rows.forEach(function (row) {
+      if (row.key) obj[row.key.trim()] = row.value || '';
+    });
     return obj;
+  }
+
+  /**
+   * Adds markdown-style formatting on top of existing HTML content.
+   * Does NOT escape HTML — content from the sheet is trusted.
+   */
+  function formatText(text) {
+    if (!text) return '';
+    var s = String(text);
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    s = s.replace(/\n/g, '<br>');
+    return s;
+  }
+
+  function phoneToLink(phone) {
+    if (!phone) return '';
+    var digits = phone.replace(/[\s\-()]/g, '');
+    if (digits.charAt(0) === '0') {
+      return '+61' + digits.substring(1);
+    }
+    return digits;
+  }
+
+  function extractImageUrl(value) {
+    if (!value) return '';
+    var s = value.trim();
+    var match = s.match(/^=IMAGE\("([^"]+)"\)/i);
+    return match ? match[1] : s;
   }
 
   function setHTML(id, html) {
@@ -61,71 +149,89 @@
     if (el) el.setAttribute(attr, value);
   }
 
+  // ─── Image Rendering ───
+
+  function renderImage(selector, url, alt) {
+    if (!url) return;
+    var placeholder = document.querySelector(selector);
+    if (!placeholder) return;
+    var img = document.createElement('img');
+    img.src = url;
+    img.alt = alt || '';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '20px';
+    placeholder.innerHTML = '';
+    placeholder.appendChild(img);
+    placeholder.style.border = 'none';
+    placeholder.style.background = 'none';
+    placeholder.style.opacity = '1';
+  }
+
   // ─── Hero ───
 
   function renderHero(data) {
     var d = toKeyValue(data);
     setText('hero_badge', d.badge);
-    setHTML('hero_heading', d.heading);
-    setHTML('hero_description', d.description);
+    setHTML('hero_heading', formatText(d.heading));
+    setHTML('hero_description', formatText(d.description));
     setText('hero_cta_primary', d.cta_primary);
     setText('hero_cta_secondary', d.cta_secondary);
+    renderImage('.hero-img-placeholder', extractImageUrl(d.hero_image),
+      'Wildflower Disability Support Services');
   }
 
-  // ─── About ───
+  // ─── About + Values ───
 
-  function renderAbout(data) {
-    var d = toKeyValue(data);
-    setIcon('about_label_icon', d.label_icon);
-    setText('about_label', d.label);
-    setHTML('about_heading', d.heading);
-    setHTML('about_subtitle', d.subtitle);
-    setHTML('about_body', d.body);
-    setText('about_cta', d.cta);
-  }
+  function renderAbout(config, items) {
+    setIcon('about_label_icon', config.label_icon);
+    setText('about_label', config.label);
+    setHTML('about_heading', formatText(config.heading));
+    setHTML('about_subtitle', formatText(config.subtitle));
+    setHTML('about_body', formatText(config.body));
+    setText('about_cta', config.cta);
+    renderImage('.about-img-placeholder', extractImageUrl(config.about_image),
+      'Wildflower Disability Support Services team');
 
-  // ─── Values (cards — generated since count is data-driven) ───
-
-  function renderValues(data) {
+    // Values grid (from the data table in the about sheet)
     var grid = document.getElementById('values_grid');
-    if (!grid) return;
-
-    grid.innerHTML = data.map(function (val) {
-      return (
-        '<div class="col-sm-6">' +
-          '<div class="value-card">' +
-            '<div class="value-icon"><i class="bi ' + val.icon + '" aria-hidden="true"></i></div>' +
-            '<div>' +
-              '<h4>' + val.title + '</h4>' +
-              '<p>' + val.description + '</p>' +
+    if (grid) {
+      grid.innerHTML = items.map(function (val) {
+        return (
+          '<div class="col-sm-6">' +
+            '<div class="value-card">' +
+              '<div class="value-icon"><i class="bi ' + (val.icon || 'bi-star') + '" aria-hidden="true"></i></div>' +
+              '<div>' +
+                '<h4>' + val.title + '</h4>' +
+                '<p>' + formatText(val.description) + '</p>' +
+              '</div>' +
             '</div>' +
-          '</div>' +
-        '</div>'
-      );
-    }).join('');
+          '</div>'
+        );
+      }).join('');
+    }
   }
 
-  // ─── Services (header text + generated cards) ───
+  // ─── Services ───
 
-  function renderServices(data) {
-    var meta = data[0];
-
+  function renderServices(config, items) {
     // Section header
-    setIcon('services_label_icon', meta.section_label_icon);
-    setText('services_label', meta.section_label);
-    setHTML('services_heading', meta.section_heading);
-    setHTML('services_subtitle', meta.section_subtitle);
+    setIcon('services_label_icon', config.section_label_icon);
+    setText('services_label', config.section_label);
+    setHTML('services_heading', formatText(config.section_heading));
+    setHTML('services_subtitle', formatText(config.section_subtitle));
 
     // Service cards
     var grid = document.getElementById('services_grid');
     if (grid) {
-      grid.innerHTML = data.map(function (svc, i) {
+      grid.innerHTML = items.map(function (svc, i) {
         return (
           '<div class="col-md-6 col-lg-4 fade-up delay-' + (i + 1) + '">' +
             '<a href="?service=' + svc.id + '#contact" class="service-card">' +
-              '<div class="service-icon"><i class="bi ' + svc.icon + '" aria-hidden="true"></i></div>' +
+              '<div class="service-icon"><i class="bi ' + (svc.icon || 'bi-gear') + '" aria-hidden="true"></i></div>' +
               '<h3>' + svc.title + '</h3>' +
-              '<p>' + svc.description + '</p>' +
+              '<p>' + formatText(svc.description) + '</p>' +
               '<span class="service-link">' +
                 'Enquire Now <i class="bi bi-arrow-right" aria-hidden="true"></i>' +
               '</span>' +
@@ -138,7 +244,7 @@
     // Service checkboxes in contact form
     var checkboxes = document.getElementById('serviceCheckboxes');
     if (checkboxes) {
-      checkboxes.innerHTML = data.map(function (svc) {
+      checkboxes.innerHTML = items.map(function (svc) {
         return (
           '<div class="form-check">' +
             '<input class="form-check-input" type="checkbox" ' +
@@ -158,26 +264,24 @@
     // Footer service links
     var footerSvc = document.getElementById('footer_services');
     if (footerSvc) {
-      footerSvc.innerHTML = data.map(function (svc) {
+      footerSvc.innerHTML = items.map(function (svc) {
         return '<li><a href="#services">' + svc.title + '</a></li>';
       }).join('');
     }
   }
 
-  // ─── Testimonials (header text + generated cards) ───
+  // ─── Testimonials ───
 
-  function renderTestimonials(data) {
-    var meta = data[0];
-
+  function renderTestimonials(config, items) {
     // Section header
-    setIcon('testimonials_label_icon', meta.section_label_icon);
-    setText('testimonials_label', meta.section_label);
-    setHTML('testimonials_heading', meta.section_heading);
+    setIcon('testimonials_label_icon', config.section_label_icon);
+    setText('testimonials_label', config.section_label);
+    setHTML('testimonials_heading', formatText(config.section_heading));
 
     // Testimonial cards
     var grid = document.getElementById('testimonials_grid');
     if (grid) {
-      grid.innerHTML = data.map(function (t, i) {
+      grid.innerHTML = items.map(function (t, i) {
         var starCount = parseInt(t.stars) || 5;
         var stars = '';
         for (var s = 0; s < starCount; s++) {
@@ -189,7 +293,7 @@
               '<div class="stars" aria-label="' + starCount + ' out of 5 stars">' +
                 stars +
               '</div>' +
-              '<blockquote>\u201c' + t.quote + '\u201d</blockquote>' +
+              '<blockquote>\u201c' + formatText(t.quote) + '\u201d</blockquote>' +
               '<div class="author">' + t.author + '</div>' +
               '<div class="author-role">' + t.role + '</div>' +
             '</div>' +
@@ -199,23 +303,22 @@
     }
   }
 
-  // ─── Team (header text + generated cards) ───
+  // ─── Team ───
 
-  function renderTeam(data) {
-    var meta = data[0];
-
+  function renderTeam(config, items) {
     // Section header
-    setIcon('team_label_icon', meta.section_label_icon);
-    setText('team_label', meta.section_label);
-    setHTML('team_heading', meta.section_heading);
-    setHTML('team_subtitle', meta.section_subtitle);
+    setIcon('team_label_icon', config.section_label_icon);
+    setText('team_label', config.section_label);
+    setHTML('team_heading', formatText(config.section_heading));
+    setHTML('team_subtitle', formatText(config.section_subtitle));
 
     // Team cards
     var grid = document.getElementById('team_grid');
     if (grid) {
-      grid.innerHTML = data.map(function (member, i) {
-        var photoHtml = member.photo_url
-          ? '<img src="' + member.photo_url + '" alt="Photo of ' + member.name + '">'
+      grid.innerHTML = items.map(function (member, i) {
+        var photoUrl = extractImageUrl(member.photo_url);
+        var photoHtml = photoUrl
+          ? '<img src="' + photoUrl + '" alt="Photo of ' + member.name + '">'
           : '<i class="bi bi-person-fill" aria-hidden="true"></i>';
         return (
           '<div class="col-md-6 col-lg-4 fade-up delay-' + (i + 1) + '">' +
@@ -226,7 +329,7 @@
               '<div class="team-info">' +
                 '<h3>' + member.name + '</h3>' +
                 '<span class="team-role">' + member.role + '</span>' +
-                '<p>' + member.bio + '</p>' +
+                '<p>' + formatText(member.bio) + '</p>' +
               '</div>' +
             '</div>' +
           '</div>'
@@ -239,12 +342,13 @@
 
   function renderContact(data) {
     var d = toKeyValue(data);
+    var phoneLinkVal = phoneToLink(d.phone);
 
     // Section header
     setIcon('contact_label_icon', d.label_icon);
     setText('contact_label', d.label);
-    setHTML('contact_heading', d.heading);
-    setHTML('contact_subtitle', d.subtitle);
+    setHTML('contact_heading', formatText(d.heading));
+    setHTML('contact_subtitle', formatText(d.subtitle));
 
     // Sidebar
     setText('contact_sidebar_heading', d.sidebar_heading);
@@ -252,7 +356,7 @@
 
     var phoneEl = document.getElementById('contact_phone');
     if (phoneEl) {
-      phoneEl.href = 'tel:' + d.phone_link;
+      phoneEl.href = 'tel:' + phoneLinkVal;
       phoneEl.textContent = d.phone;
     }
 
@@ -262,34 +366,34 @@
       emailEl.textContent = d.email;
     }
 
-    setHTML('contact_area', d.area);
+    setHTML('contact_area', formatText(d.area));
     setHTML('contact_hours',
-      d.hours_weekday + '<br>' +
-      d.hours_saturday + '<br>' +
-      d.hours_sunday + '<br><br>' +
-      '<strong>' + d.hours_note + '</strong>'
+      formatText(d.hours_weekday) + '<br>' +
+      formatText(d.hours_saturday) + '<br>' +
+      formatText(d.hours_sunday) + '<br><br>' +
+      '<strong>' + formatText(d.hours_note) + '</strong>'
     );
 
     // Footer contact links
     var fp = document.getElementById('footer_phone');
     if (fp) {
-      fp.href = 'tel:' + d.phone_link;
+      fp.href = 'tel:' + phoneLinkVal;
       fp.textContent = d.phone;
     }
 
     var fe = document.getElementById('footer_email');
     if (fe) fe.href = 'mailto:' + d.email;
 
-    setHTML('footer_area', d.area);
+    setHTML('footer_area', formatText(d.area));
   }
 
   // ─── CTA Banner ───
 
-  function renderCTA(data) {
+  function renderCTA(data, contactPhone) {
     var d = toKeyValue(data);
     setText('cta_heading', d.heading);
     setText('cta_description', d.description);
-    setAttr('cta_phone_link', 'href', 'tel:' + d.phone_link);
+    setAttr('cta_phone_link', 'href', 'tel:' + phoneToLink(contactPhone || ''));
     setText('cta_phone_display', d.phone_display);
   }
 
@@ -305,18 +409,30 @@
 
   // ─── Load All Content ───
 
+  var contentData = {};
+
   Promise.all([
-    fetchCSV(DATA_SOURCES.hero).then(renderHero),
-    fetchCSV(DATA_SOURCES.about).then(renderAbout),
-    fetchCSV(DATA_SOURCES.values).then(renderValues),
-    fetchCSV(DATA_SOURCES.services).then(renderServices),
-    fetchCSV(DATA_SOURCES.testimonials).then(renderTestimonials),
-    fetchCSV(DATA_SOURCES.team).then(renderTeam),
-    fetchCSV(DATA_SOURCES.contact).then(renderContact),
-    fetchCSV(DATA_SOURCES.cta).then(renderCTA),
-    fetchCSV(DATA_SOURCES.footer).then(renderFooter)
+    fetchCSV(DATA_SOURCES.hero).then(function (d) { contentData.hero = d; }),
+    fetchMixedCSV(DATA_SOURCES.about).then(function (d) { contentData.about = d; }),
+    fetchMixedCSV(DATA_SOURCES.services).then(function (d) { contentData.services = d; }),
+    fetchMixedCSV(DATA_SOURCES.testimonials).then(function (d) { contentData.testimonials = d; }),
+    fetchMixedCSV(DATA_SOURCES.team).then(function (d) { contentData.team = d; }),
+    fetchCSV(DATA_SOURCES.contact).then(function (d) { contentData.contact = d; }),
+    fetchCSV(DATA_SOURCES.cta).then(function (d) { contentData.cta = d; }),
+    fetchCSV(DATA_SOURCES.footer).then(function (d) { contentData.footer = d; })
   ])
     .then(function () {
+      var contactKV = toKeyValue(contentData.contact);
+
+      renderHero(contentData.hero);
+      renderAbout(contentData.about.config, contentData.about.items);
+      renderServices(contentData.services.config, contentData.services.items);
+      renderTestimonials(contentData.testimonials.config, contentData.testimonials.items);
+      renderTeam(contentData.team.config, contentData.team.items);
+      renderContact(contentData.contact);
+      renderCTA(contentData.cta, contactKV.phone);
+      renderFooter(contentData.footer);
+
       if (typeof window.initDynamicContent === 'function') {
         window.initDynamicContent();
       }
