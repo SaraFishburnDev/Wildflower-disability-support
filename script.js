@@ -2,11 +2,67 @@
 const navbar = document.querySelector('.navbar');
 const backToTop = document.getElementById('backToTop');
 
-window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY > 50;
-    navbar.classList.toggle('scrolled', scrolled);
-    backToTop.classList.toggle('visible', window.scrollY > 400);
-});
+(() => {
+    const scrollThreshold = 120;
+    const upThreshold = 7;
+    const downThreshold = 5;
+    const cooldownMs = 400;
+
+    let lastY = document.documentElement.scrollTop || document.body.scrollTop;
+    let direction = "up";
+    let anchorY = lastY;
+    let cooldown = false;
+
+    function setCooldown() {
+        cooldown = true;
+        setTimeout(() => (cooldown = false), cooldownMs);
+    }
+
+    function onScroll() {
+        const y = document.documentElement.scrollTop || document.body.scrollTop;
+
+        // Back to top button visibility
+        backToTop.classList.toggle('visible', y > 400);
+
+        // Scrolled shadow
+        navbar.classList.toggle('scrolled', y > 50);
+
+        if (cooldown) return;
+
+        if (y <= scrollThreshold) {
+            if (navbar.classList.contains("navbar-scroll")) {
+                navbar.classList.remove("navbar-scroll");
+                setCooldown();
+            }
+
+            lastY = y;
+            anchorY = y;
+            direction = "up";
+            return;
+        }
+
+        const nowDir = y > lastY ? "down" : y < lastY ? "up" : direction;
+
+        if (nowDir !== direction) {
+            direction = nowDir;
+            anchorY = y;
+        }
+
+        const delta = y - anchorY;
+
+        if (direction === "down" && delta >= downThreshold) {
+            if (!navbar.classList.contains("navbar-scroll")) {
+                navbar.classList.add("navbar-scroll");
+                setCooldown();
+            }
+            anchorY = y;
+        }
+
+        lastY = y;
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+})();
 
 // ─── Back to Top ───
 backToTop.addEventListener('click', () => {
