@@ -506,7 +506,6 @@ body:has(.menu-container.open) {
 .service-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--clr-pink);
 }
 .service-icon {
     width: 72px;
