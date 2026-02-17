@@ -100,6 +100,10 @@ const navbarIsland = document.querySelector('.navbar-island');
 const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 let focusableEls = [], firstFocusable = null, lastFocusable = null;
 
+const mainContent = document.getElementById('main-content');
+const pageFooter = document.querySelector('footer[role="contentinfo"]');
+const heroSection = document.querySelector('.hero');
+
 function openMenu() {
     const container = navbarIsland.closest('.container');
     const cs = getComputedStyle(container);
@@ -113,6 +117,12 @@ function openMenu() {
     menuOverlay.style.display = 'block';
     requestAnimationFrame(() => { menuOverlay.style.opacity = '1'; });
     menuToggleBtn.setAttribute('aria-expanded', 'true');
+    menuContainer.setAttribute('aria-hidden', 'false');
+
+    // Hide background content from screen readers
+    if (mainContent) mainContent.setAttribute('aria-hidden', 'true');
+    if (pageFooter) pageFooter.setAttribute('aria-hidden', 'true');
+    if (heroSection) heroSection.setAttribute('aria-hidden', 'true');
 
     focusableEls = [...menuContainer.querySelectorAll(focusableSelector)];
     firstFocusable = focusableEls[0];
@@ -129,6 +139,13 @@ function closeMenu(returnFocus) {
     menuOverlay.style.opacity = '0';
     setTimeout(() => { menuOverlay.style.display = 'none'; }, 400);
     menuToggleBtn.setAttribute('aria-expanded', 'false');
+    menuContainer.setAttribute('aria-hidden', 'true');
+
+    // Restore background content to screen readers
+    if (mainContent) mainContent.removeAttribute('aria-hidden');
+    if (pageFooter) pageFooter.removeAttribute('aria-hidden');
+    if (heroSection) heroSection.removeAttribute('aria-hidden');
+
     if (returnFocus !== false) menuToggleBtn.focus();
 }
 
