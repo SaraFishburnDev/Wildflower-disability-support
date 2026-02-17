@@ -607,18 +607,20 @@ h1, h2, h3, h4, h5 {
     padding: 0;
     border-radius: 20px;
     overflow: hidden;
-    max-width: 900px;
+    max-width: 1100px;
     width: 90vw;
 }
 .team-modal-content {
     background: #fff;
     border-radius: 20px;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    aspect-ratio: 2.5 / 1;
 }
 .team-modal-photo {
-    width: 100%;
-    height: 100%;
-    min-height: 280px;
+    flex-shrink: 0;
+    width: 40%;
     background: var(--clr-primary-light);
     display: flex;
     align-items: center;
@@ -634,10 +636,10 @@ h1, h2, h3, h4, h5 {
     color: var(--clr-primary);
 }
 .team-modal-body {
+    flex: 1;
     padding: 32px;
-    text-align: center;
+    text-align: left;
     overflow: auto;
-    max-height: 70vh;
 }
 .team-modal-body h3 {
     font-size: 1.5rem;
@@ -655,12 +657,16 @@ h1, h2, h3, h4, h5 {
         max-height: 90vh;
         overflow-y: auto;
     }
-    .team-modal-body {
-        overflow: visible;
-        max-height: none;
+    .team-modal-content {
+        flex-direction: column;
+        aspect-ratio: auto;
     }
     .team-modal-photo {
         height: 260px;
+        width: 100%;
+    }
+    .team-modal-body {
+        overflow: visible;
     }
 }
 

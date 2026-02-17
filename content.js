@@ -381,17 +381,11 @@
 
     var html =
       '<div class="team-modal-content">' +
-        '<div class="row g-0">' +
-          '<div class="col-md-5">' +
-            '<div class="team-modal-photo">' + photoHtml + '</div>' +
-          '</div>' +
-          '<div class="col-md-7">' +
-            '<div class="team-modal-body">' +
-              '<h3>' + member.name + '</h3>' +
-              '<span class="team-role">' + member.role + '</span>' +
-              '<div class="team-modal-bio">' + formatText(member.bio_full || member.bio_short) + '</div>' +
-            '</div>' +
-          '</div>' +
+        '<div class="team-modal-photo">' + photoHtml + '</div>' +
+        '<div class="team-modal-body">' +
+          '<h3>' + member.name + '</h3>' +
+          '<span class="team-role">' + member.role + '</span>' +
+          '<div class="team-modal-bio">' + formatText(member.bio_full || member.bio_short) + '</div>' +
         '</div>' +
       '</div>';
 
