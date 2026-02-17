@@ -17,6 +17,9 @@
     href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
+  <!-- Splide.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -160,8 +163,12 @@
           </span>
           <h2 class="section-title" id="testimonials_heading" style="color:#fff;"></h2>
         </div>
-        <div class="row g-4 justify-content-center" id="testimonials_grid">
-          <!-- Cards generated from testimonials.csv -->
+        <div id="testimonialSplide" class="splide fade-up" aria-label="Testimonials">
+          <div class="splide__track">
+            <ul class="splide__list" id="testimonials_grid">
+              <!-- Slides generated from testimonials.csv -->
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -387,6 +394,8 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Splide.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
   <!-- PapaParse CSV parser -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 

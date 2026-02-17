@@ -278,17 +278,17 @@
     setText('testimonials_label', config.section_label);
     setHTML('testimonials_heading', formatText(config.section_heading));
 
-    // Testimonial cards
-    var grid = document.getElementById('testimonials_grid');
-    if (grid) {
-      grid.innerHTML = items.map(function (t, i) {
+    // Testimonial Splide slides
+    var container = document.getElementById('testimonials_grid');
+    if (container) {
+      container.innerHTML = items.map(function (t) {
         var starCount = parseInt(t.stars) || 5;
         var stars = '';
         for (var s = 0; s < starCount; s++) {
           stars += '<i class="bi bi-star-fill"></i>';
         }
         return (
-          '<div class="col-lg-4 fade-up delay-' + (i + 1) + '">' +
+          '<li class="splide__slide">' +
             '<div class="testimonial-card">' +
               '<div class="stars" aria-label="' + starCount + ' out of 5 stars">' +
                 stars +
@@ -297,9 +297,25 @@
               '<div class="author">' + t.author + '</div>' +
               '<div class="author-role">' + t.role + '</div>' +
             '</div>' +
-          '</div>'
+          '</li>'
         );
       }).join('');
+    }
+
+    // Initialise Splide
+    if (typeof Splide !== 'undefined') {
+      new Splide('#testimonialSplide', {
+        type: 'loop',
+        perPage: 2,
+        gap: '1.5rem',
+        autoplay: true,
+        interval: 6000,
+        pauseOnHover: true,
+        pagination: false,
+        breakpoints: {
+          991: { perPage: 1 }
+        }
+      }).mount();
     }
   }
 

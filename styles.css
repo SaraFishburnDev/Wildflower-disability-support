@@ -497,6 +497,43 @@ h1, h2, h3, h4, h5 {
     font-size: 0.9rem;
 }
 
+/* Testimonial Splide Carousel */
+#testimonialSplide {
+    padding: 0 3.5rem;
+}
+#testimonialSplide .testimonial-card {
+    height: 100%;
+}
+#testimonialSplide .splide__arrow {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+    transition: background 0.2s, border-color 0.2s;
+}
+#testimonialSplide .splide__arrow:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+}
+#testimonialSplide .splide__arrow:disabled {
+    display: none;
+}
+#testimonialSplide .splide__arrow svg {
+    fill: #fff;
+    width: 18px;
+    height: 18px;
+}
+#testimonialSplide .splide__arrow--prev {
+    left: 0;
+}
+#testimonialSplide .splide__arrow--next {
+    right: 0;
+}
+@media (max-width: 575px) {
+    #testimonialSplide { padding: 0 2.5rem; }
+}
+
 /* ─── Meet the Team ─── */
 .team-card {
     background: #fff;
