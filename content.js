@@ -157,7 +157,7 @@
 
   // ─── Image Rendering ───
 
-  function renderImage(selector, url, alt) {
+  function renderImage(selector, url, alt, fancyboxGroup) {
     if (!url) return;
     var placeholder = document.querySelector(selector);
     if (!placeholder) return;
@@ -165,11 +165,18 @@
     img.src = url;
     img.alt = alt || '';
     img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.objectFit = 'cover';
+    img.style.height = 'auto';
     img.style.borderRadius = '20px';
     placeholder.innerHTML = '';
-    placeholder.appendChild(img);
+    if (fancyboxGroup) {
+      var link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('data-fancybox', fancyboxGroup);
+      link.appendChild(img);
+      placeholder.appendChild(link);
+    } else {
+      placeholder.appendChild(img);
+    }
     placeholder.style.border = 'none';
     placeholder.style.background = 'none';
     placeholder.style.opacity = '1';
@@ -197,8 +204,54 @@
     setHTML('about_subtitle', formatText(config.subtitle));
     setHTML('about_body', formatText(config.body));
     setText('about_cta', config.cta);
-    renderImage('.about-img-placeholder', extractImageUrl(config.about_image),
-      'Wildflower Disability Support Services team');
+    renderImage('#aboutImg1', extractImageUrl(config.about_image),
+      'Wildflower Disability Support Services team', 'about-gallery');
+
+    var img2 = extractImageUrl(config.about_image_2);
+    var img3 = extractImageUrl(config.about_image_3);
+    if (img2 || img3) {
+      // Desktop: inside the gallery column, hidden on mobile
+      var desktopRow = document.createElement('div');
+      desktopRow.className = 'about-gallery-small d-none d-lg-grid';
+      if (img2) {
+        var dd2 = document.createElement('div');
+        dd2.className = 'about-img-placeholder';
+        dd2.id = 'aboutImg2Desktop';
+        desktopRow.appendChild(dd2);
+      }
+      if (img3) {
+        var dd3 = document.createElement('div');
+        dd3.className = 'about-img-placeholder';
+        dd3.id = 'aboutImg3Desktop';
+        desktopRow.appendChild(dd3);
+      }
+      document.getElementById('aboutGallery').appendChild(desktopRow);
+      if (img2) renderImage('#aboutImg2Desktop', img2, 'Wildflower Disability Support Services', 'about-gallery');
+      if (img3) renderImage('#aboutImg3Desktop', img3, 'Wildflower Disability Support Services', 'about-gallery');
+
+      // Mobile: separate column after text, hidden on desktop
+      var mobileContainer = document.getElementById('aboutSmallGallery');
+      var mobileRow = document.createElement('div');
+      mobileRow.className = 'about-gallery-small';
+      if (img2) {
+        var md2 = document.createElement('div');
+        md2.className = 'about-img-placeholder';
+        md2.id = 'aboutImg2Mobile';
+        mobileRow.appendChild(md2);
+      }
+      if (img3) {
+        var md3 = document.createElement('div');
+        md3.className = 'about-img-placeholder';
+        md3.id = 'aboutImg3Mobile';
+        mobileRow.appendChild(md3);
+      }
+      mobileContainer.appendChild(mobileRow);
+      mobileContainer.classList.remove('d-none');
+      if (img2) renderImage('#aboutImg2Mobile', img2, 'Wildflower Disability Support Services', 'about-gallery');
+      if (img3) renderImage('#aboutImg3Mobile', img3, 'Wildflower Disability Support Services', 'about-gallery');
+    }
+
+    Fancybox.bind('[data-fancybox="about-gallery"]');
 
     // Values grid (from the data table in the about sheet)
     var grid = document.getElementById('values_grid');
@@ -206,7 +259,7 @@
       grid.innerHTML = items.map(function (val) {
         return (
           '<div class="col-sm-6">' +
-            '<div class="value-card">' +
+            '<div class="value-card d-flex flex-sm-column flex-lg-row align-items-sm-center align-items-lg-start text-sm-center text-lg-left">' +
               '<div class="value-icon"><i class="bi ' + (val.icon || 'bi-star') + '" aria-hidden="true"></i></div>' +
               '<div>' +
                 '<h4>' + val.title + '</h4>' +
