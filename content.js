@@ -2,17 +2,19 @@
   'use strict';
 
   // ─── Configuration ───
-  // Change these URLs to Google Sheets CSV export URLs when ready
+  var SHEET_ID = '1AtkWq2Mr6c9MbNRRpxxgQXD550Vk1JhvWh4ghdw6-Cs';
+  var BASE = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=';
+
   var DATA_SOURCES = {
-    hero: 'data/hero.csv',
-    about: 'data/about.csv',
-    values: 'data/values.csv',
-    services: 'data/services.csv',
-    testimonials: 'data/testimonials.csv',
-    team: 'data/team.csv',
-    contact: 'data/contact.csv',
-    cta: 'data/cta.csv',
-    footer: 'data/footer.csv'
+    hero:         BASE + 'hero',
+    about:        BASE + 'about',
+    values:       BASE + 'values',
+    services:     BASE + 'services',
+    testimonials: BASE + 'testimonials',
+    team:         BASE + 'team',
+    contact:      BASE + 'contact',
+    cta:          BASE + 'cta',
+    footer:       BASE + 'footer'
   };
 
   // ─── Helpers ───
@@ -317,6 +319,15 @@
     .then(function () {
       if (typeof window.initDynamicContent === 'function') {
         window.initDynamicContent();
+      }
+
+      // Dismiss loading screen
+      var loader = document.getElementById('loadingScreen');
+      if (loader) {
+        loader.classList.add('fade-out');
+        loader.addEventListener('transitionend', function () {
+          loader.remove();
+        });
       }
     })
     .catch(function (err) {
