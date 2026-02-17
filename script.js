@@ -112,6 +112,38 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeElements.forEach(el => observer.observe(el));
 
+// ─── Service Enquiry Links ───
+function checkService(value) {
+    const cb = document.getElementById(`service-${value}`);
+    if (cb) cb.checked = true;
+}
+
+// Handle ?service= URL param on page load
+(() => {
+    const params = new URLSearchParams(window.location.search);
+    const service = params.get('service');
+    if (service) {
+        checkService(service);
+        setTimeout(() => {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    }
+})();
+
+// Intercept enquire links so they don't cause a full page reload
+document.querySelectorAll('a.service-card[href*="?service="]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = new URL(link.href);
+        const service = url.searchParams.get('service');
+        if (service) {
+            checkService(service);
+            history.replaceState(null, '', `?service=${service}#contact`);
+        }
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
 // ─── Form Validation & Submission ───
 const form = document.getElementById('contactForm');
 const formSuccess = document.getElementById('formSuccess');
