@@ -126,7 +126,13 @@
     if (!value) return '';
     var s = value.trim();
     var match = s.match(/^=IMAGE\("([^"]+)"\)/i);
-    return match ? match[1] : s;
+    if (match) s = match[1];
+    // Convert any Google Drive URL to a direct-serve thumbnail URL
+    var driveMatch = s.match(/drive\.google\.com\/file\/d\/([^/]+)/)
+      || s.match(/drive\.google\.com\/uc\?.*id=([^&]+)/)
+      || s.match(/drive\.google\.com\/thumbnail\?.*id=([^&]+)/);
+    if (driveMatch) return 'https://drive.google.com/thumbnail?id=' + driveMatch[1] + '&sz=w1000';
+    return s;
   }
 
   function setHTML(id, html) {
