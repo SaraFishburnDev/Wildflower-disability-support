@@ -338,20 +338,67 @@
           : '<i class="bi bi-person-fill" aria-hidden="true"></i>';
         return (
           '<div class="col-md-6 col-lg-4 fade-up delay-' + (i + 1) + '">' +
-            '<div class="team-card">' +
+            '<div class="team-card" role="button" tabindex="0" data-team-index="' + i + '" aria-label="Read more about ' + member.name + '">' +
               '<div class="team-photo" role="img" aria-label="Photo of ' + member.name + '">' +
                 photoHtml +
               '</div>' +
               '<div class="team-info">' +
                 '<h3>' + member.name + '</h3>' +
                 '<span class="team-role">' + member.role + '</span>' +
-                '<p>' + formatText(member.bio) + '</p>' +
+                '<p>' + formatText(member.bio_short) + '</p>' +
+                '<span class="team-read-more"><strong>click to read more</strong></span>' +
               '</div>' +
             '</div>' +
           '</div>'
         );
       }).join('');
+
+      // Team modal click handlers
+      grid.addEventListener('click', function (e) {
+        var card = e.target.closest('.team-card');
+        if (!card) return;
+        var idx = parseInt(card.getAttribute('data-team-index'), 10);
+        openTeamModal(items[idx]);
+      });
+      grid.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          var card = e.target.closest('.team-card');
+          if (!card) return;
+          e.preventDefault();
+          var idx = parseInt(card.getAttribute('data-team-index'), 10);
+          openTeamModal(items[idx]);
+        }
+      });
     }
+  }
+
+  function openTeamModal(member) {
+    console.log('Team member data:', member);
+    var photoUrl = extractImageUrl(member.photo_url);
+    var photoHtml = photoUrl
+      ? '<img src="' + photoUrl + '" alt="Photo of ' + member.name + '">'
+      : '<div class="team-modal-icon"><i class="bi bi-person-fill" aria-hidden="true"></i></div>';
+
+    var html =
+      '<div class="team-modal-content">' +
+        '<div class="row g-0">' +
+          '<div class="col-md-5">' +
+            '<div class="team-modal-photo">' + photoHtml + '</div>' +
+          '</div>' +
+          '<div class="col-md-7">' +
+            '<div class="team-modal-body">' +
+              '<h3>' + member.name + '</h3>' +
+              '<span class="team-role">' + member.role + '</span>' +
+              '<div class="team-modal-bio">' + formatText(member.bio_full || member.bio_short) + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    Fancybox.show([{ src: html, type: 'html' }], {
+      mainClass: 'team-fancybox',
+      closeButton: 'top',
+    });
   }
 
   // ─── Contact ───

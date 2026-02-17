@@ -578,11 +578,90 @@ h1, h2, h3, h4, h5 {
     color: var(--clr-pink-dark);
     margin-bottom: 12px;
 }
+.team-card[role="button"] {
+    cursor: pointer;
+}
 .team-info p {
     color: var(--clr-text-muted);
     font-size: 0.95rem;
     line-height: 1.7;
     margin: 0;
+}
+.team-read-more {
+    display: block;
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: var(--clr-primary);
+    letter-spacing: 0.5px;
+    transition: color var(--transition);
+}
+.team-card:hover .team-read-more {
+    color: var(--clr-primary-dark);
+}
+
+/* ─── Team Modal (Fancybox) ─── */
+.team-fancybox .fancybox__backdrop {
+    background: rgba(61, 92, 61, 0.85);
+}
+.team-fancybox .fancybox__content {
+    padding: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    max-width: 900px;
+    width: 90vw;
+}
+.team-modal-content {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.team-modal-photo {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    background: var(--clr-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.team-modal-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.team-modal-icon {
+    font-size: 5rem;
+    color: var(--clr-primary);
+}
+.team-modal-body {
+    padding: 32px;
+    text-align: center;
+    overflow: auto;
+    max-height: 70vh;
+}
+.team-modal-body h3 {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+.team-modal-bio {
+    color: var(--clr-text-muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-top: 16px;
+    text-align: left;
+}
+@media (max-width: 767px) {
+    .team-fancybox .fancybox__content {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .team-modal-body {
+        overflow: visible;
+        max-height: none;
+    }
+    .team-modal-photo {
+        height: 260px;
+    }
 }
 
 /* ─── Contact Section ─── */
