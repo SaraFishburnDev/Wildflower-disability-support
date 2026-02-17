@@ -141,10 +141,6 @@
     if (el) el.innerHTML = html;
   }
 
-  function setText(id, text) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = text;
-  }
 
   function setIcon(id, iconClass) {
     var el = document.getElementById(id);
@@ -187,11 +183,11 @@
 
   function renderHero(data) {
     var d = toKeyValue(data);
-    setText('hero_badge', d.badge);
+    setHTML('hero_badge', d.badge);
     setHTML('hero_heading', formatText(d.heading));
     setHTML('hero_description', formatText(d.description));
-    setText('hero_cta_primary', d.cta_primary);
-    setText('hero_cta_secondary', d.cta_secondary);
+    setHTML('hero_cta_primary', d.cta_primary);
+    setHTML('hero_cta_secondary', d.cta_secondary);
     renderImage('.hero-img-placeholder', extractImageUrl(d.hero_image),
       'Wildflower Disability Support Services');
   }
@@ -200,11 +196,11 @@
 
   function renderAbout(config, items) {
     setIcon('about_label_icon', config.label_icon);
-    setText('about_label', config.label);
+    setHTML('about_label', config.label);
     setHTML('about_heading', formatText(config.heading));
     setHTML('about_subtitle', formatText(config.subtitle));
     setHTML('about_body', formatText(config.body));
-    setText('about_cta', config.cta);
+    setHTML('about_cta', config.cta);
     renderImage('#aboutImg1', extractImageUrl(config.about_image),
       'Wildflower Disability Support Services team', 'about-gallery');
 
@@ -278,7 +274,7 @@
   function renderServices(config, items) {
     // Section header
     setIcon('services_label_icon', config.section_label_icon);
-    setText('services_label', config.section_label);
+    setHTML('services_label', config.section_label);
     setHTML('services_heading', formatText(config.section_heading));
     setHTML('services_subtitle', formatText(config.section_subtitle));
 
@@ -335,7 +331,7 @@
   function renderTestimonials(config, items) {
     // Section header
     setIcon('testimonials_label_icon', config.section_label_icon);
-    setText('testimonials_label', config.section_label);
+    setHTML('testimonials_label', config.section_label);
     setHTML('testimonials_heading', formatText(config.section_heading));
 
     // Testimonial Splide slides
@@ -384,7 +380,7 @@
   function renderTeam(config, items) {
     // Section header
     setIcon('team_label_icon', config.section_label_icon);
-    setText('team_label', config.section_label);
+    setHTML('team_label', config.section_label);
     setHTML('team_heading', formatText(config.section_heading));
     setHTML('team_subtitle', formatText(config.section_subtitle));
 
@@ -460,7 +456,7 @@
   function renderGallery(config, items) {
     // Section header
     setIcon('gallery_label_icon', config.section_label_icon);
-    setText('gallery_label', config.section_label);
+    setHTML('gallery_label', config.section_label);
     setHTML('gallery_heading', formatText(config.section_heading));
     setHTML('gallery_subtitle', formatText(config.section_subtitle));
 
@@ -528,13 +524,13 @@
 
     // Section header
     setIcon('contact_label_icon', d.label_icon);
-    setText('contact_label', d.label);
+    setHTML('contact_label', d.label);
     setHTML('contact_heading', formatText(d.heading));
     setHTML('contact_subtitle', formatText(d.subtitle));
 
     // Sidebar
-    setText('contact_sidebar_heading', d.sidebar_heading);
-    setText('contact_sidebar_text', d.sidebar_text);
+    setHTML('contact_sidebar_heading', d.sidebar_heading);
+    setHTML('contact_sidebar_text', d.sidebar_text);
 
     var phoneEl = document.getElementById('contact_phone');
     if (phoneEl) {
@@ -573,18 +569,18 @@
 
   function renderCTA(data, contactPhone) {
     var d = toKeyValue(data);
-    setText('cta_heading', d.heading);
-    setText('cta_description', d.description);
+    setHTML('cta_heading', d.heading);
+    setHTML('cta_description', d.description);
     setAttr('cta_phone_link', 'href', 'tel:' + phoneToLink(contactPhone || ''));
-    setText('cta_phone_display', d.phone_display);
+    setHTML('cta_phone_display', d.phone_display);
   }
 
   // ─── Footer ───
 
   function renderFooter(data) {
     var d = toKeyValue(data);
-    setText('footer_description', d.description);
-    setText('footer_abn', d.abn);
+    setHTML('footer_description', d.description);
+    setHTML('footer_abn', d.abn);
     setAttr('footer_facebook', 'href', d.facebook);
     setAttr('nav_facebook', 'href', d.facebook);
     setAttr('menu_facebook', 'href', d.facebook);

@@ -28,7 +28,7 @@
 <body>
   <!-- Loading Screen -->
   <div class="loading-screen" id="loadingScreen">
-    <img src="logo.png" alt="Wildflower Disability Support Services">
+    <img src="footer_logo.svg" alt="Wildflower Disability Support Services">
   </div>
 
   <!-- Skip Link -->
@@ -38,7 +38,7 @@
   <nav class="navbar navbar-expand-lg fixed-top" aria-label="Main navigation">
     <div class="container">
       <span class="navbar-brand">
-        <img src="logo.png" alt="Wildflower Disability Support Services logo">
+        <img src="nav_logo.svg" alt="Wildflower Disability Support Services logo">
       </span>
       <!-- Desktop nav -->
       <ul class="navbar-nav ms-auto align-items-center gap-1 d-none d-lg-flex flex-row">
@@ -72,7 +72,7 @@
   <div id="menuContainer" class="menu-container" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <div class="menu-header">
       <span class="navbar-brand">
-        <img src="logo.png" alt="Wildflower Disability Support Services logo">
+        <img src="nav_logo.svg" alt="Wildflower Disability Support Services logo">
       </span>
       <button id="closeMenu" class="menu-close-btn" aria-label="Close navigation menu">
         <i class="bi bi-x-lg" aria-hidden="true"></i>
@@ -378,37 +378,42 @@
   <footer role="contentinfo">
     <div class="container">
       <div class="row gy-4">
-        <div class="col-lg-4">
-          <h5 style="font-family:var(--font-heading); font-size:1.3rem;">
-            <img src="logo.png" alt="Wildflower logo"
-              style="height:80px; width:auto; margin-bottom:8px; display:block;">
-          </h5>
-          <p id="footer_description" style="opacity:0.8; line-height:1.7; font-size:0.95rem;"></p>
-          <img src="ndis-registered-provider.png" alt="Registered NDIS Provider"
-            style="height:80px; width:auto; margin-top:12px; opacity:0.9;">
+        <!-- Logo – full left side -->
+        <div class="col-lg-3 d-flex align-items-center justify-content-start">
+          <img src="footer_logo.svg" alt="Wildflower logo" class="footer-logo">
         </div>
-        <div class="col-sm-6 col-lg-2 offset-lg-2">
-          <h5>Quick Links</h5>
-          <ul class="list-unstyled footer-links">
-            <li><a href="#who-we-are">Who We Are</a></li>
-            <li><a href="#services">Our Services</a></li>
-            <li><a href="#contact">Contact Us</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-6 col-lg-2">
-          <h5>Services</h5>
-          <ul class="list-unstyled footer-links" id="footer_services">
-            <!-- Populated from services.csv -->
-          </ul>
-        </div>
-        <div class="col-sm-6 col-lg-2">
-          <h5>Contact</h5>
-          <ul class="list-unstyled footer-links">
-            <li><a id="footer_phone"></a></li>
-            <li><a id="footer_email">Email Us</a></li>
-            <li><a id="footer_facebook" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook" aria-hidden="true"></i> Facebook</a></li>
-            <li><span id="footer_area" style="opacity:0.7"></span></li>
-          </ul>
+        <!-- Right side content -->
+        <div class="col-lg-9">
+          <div class="row gy-4">
+            <div class="col-sm-6 col-lg-4 d-flex flex-column align-items-start justify-content-between">
+              <p id="footer_description" style="opacity:0.8; line-height:1.7; font-size:0.95rem;"></p>
+              <img src="ndis-registered-provider.png" alt="Registered NDIS Provider"
+                style="height:80px; width:auto; margin-top:12px; opacity:0.9;">
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <h5>Quick Links</h5>
+              <ul class="list-unstyled footer-links">
+                <li><a href="#who-we-are">Who We Are</a></li>
+                <li><a href="#services">Our Services</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+              </ul>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <h5>Services</h5>
+              <ul class="list-unstyled footer-links" id="footer_services">
+                <!-- Populated from services.csv -->
+              </ul>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+              <h5>Contact</h5>
+              <ul class="list-unstyled footer-links">
+                <li><a id="footer_phone"></a></li>
+                <li><a id="footer_email">Email Us</a></li>
+                <li><a id="footer_facebook" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook" aria-hidden="true"></i> Facebook</a></li>
+                <li><span id="footer_area" style="opacity:0.7"></span></li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <div class="footer-bottom text-center">

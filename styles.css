@@ -1081,6 +1081,11 @@ footer {
     color: rgba(255,255,255,0.85);
     padding: 48px 0 24px;
 }
+.footer-logo {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+}
 footer h5 {
     color: #fff;
     font-size: 1.1rem;
@@ -1211,7 +1216,7 @@ footer .footer-bottom {
     pointer-events: none;
 }
 .loading-screen img {
-    height: 100px;
+    height: 300px;
     width: auto;
     margin-bottom: 24px;
     animation: loading-breathe 2s ease-in-out infinite;
