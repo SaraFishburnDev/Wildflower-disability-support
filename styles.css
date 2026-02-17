@@ -1279,6 +1279,13 @@ footer .footer-bottom {
     .cta-inner { padding: 32px 20px; }
     .contact-form-card { padding: 28px 20px; }
     .contact-info-card { padding: 28px 20px; }
+    .btn-primary-custom,
+    .btn-secondary-custom,
+    .btn-outline-warm,
+    .btn-submit {
+        font-size: 1rem;
+        padding: 0.5rem 1.5rem;
+    }
 }
 
 /* ─── Loading Screen ─── */
