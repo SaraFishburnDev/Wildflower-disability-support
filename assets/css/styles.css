@@ -1369,6 +1369,130 @@ footer .footer-bottom {
     transform: translateY(-3px);
 }
 
+/* ─── Share Widget ─── */
+
+/* Desktop: left edge, vertically centered, stacked circles */
+.share-desktop {
+    position: fixed;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    gap: 8px;
+    z-index: 900;
+}
+.share-desktop .share-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: var(--clr-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: width 0.3s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.share-desktop .share-btn i {
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+}
+.share-desktop .share-label {
+    opacity: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+}
+.share-desktop .share-btn:hover {
+    width: var(--share-open-w, 200px);
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+.share-desktop .share-btn:hover .share-label {
+    opacity: 1;
+}
+
+/* Mobile: bottom-left floating button + tray */
+.share-mobile {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 900;
+}
+.share-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: var(--clr-primary);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: background 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+.share-tray {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+.share-tray.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.share-tray-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    color: var(--clr-text);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+.share-tray-btn:hover,
+.share-tray-btn:active {
+    background: var(--clr-primary-light);
+}
+.share-tray-btn i {
+    color: var(--clr-primary);
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
 /* ─── Animations ─── */
 .fade-up {
     opacity: 1;
