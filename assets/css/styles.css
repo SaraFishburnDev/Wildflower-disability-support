@@ -324,7 +324,7 @@ body:has(.menu-container.open) .navbar-island {
 /* ─── Hero Section ─── */
 .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: calc(100vh - var(--navbar-height, 90px));
     display: flex;
     align-items: center;
     padding-top: 100px;
