@@ -72,10 +72,10 @@ backToTop.addEventListener('click', () => {
 });
 
 // ─── Active Nav Link Highlighting ───
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-link:not(.nav-cta)');
 
 function updateActiveNav() {
+    const sections = document.querySelectorAll('section[id], header[id]');
+    const navLinks = document.querySelectorAll('.nav-link:not(.nav-cta)');
     const scrollPos = window.scrollY + 120;
     sections.forEach(section => {
         const top = section.offsetTop;
@@ -176,39 +176,42 @@ menuContainer.addEventListener('keydown', (e) => {
     }
 });
 
-// Close menu & instant scroll on menu link click
-document.querySelectorAll('#menuContainer .menu-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-        const href = link.getAttribute('href');
-        if (href && href.startsWith('#')) {
-            e.preventDefault();
-            closeMenu(false);
-            const target = document.querySelector(href);
-            if (target) {
-                // Re-trigger fade-in for the target section (respects reduced motion)
-                const prefersMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                if (prefersMotion) {
-                    const fadeEls = target.querySelectorAll('.fade-up.visible');
-                    fadeEls.forEach(el => el.classList.remove('visible'));
-                    window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
-                    requestAnimationFrame(() => {
-                        fadeEls.forEach(el => el.classList.add('visible'));
-                    });
-                } else {
-                    window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
-                }
+// Close menu & instant scroll on menu link click (event delegation for dynamic links)
+menuContainer.addEventListener('click', (e) => {
+    const link = e.target.closest('.menu-link');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+        e.preventDefault();
+        closeMenu(false);
+        const target = document.querySelector(href);
+        if (target) {
+            // Re-trigger fade-in for the target section (respects reduced motion)
+            const prefersMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersMotion) {
+                const fadeEls = target.querySelectorAll('.fade-up.visible');
+                fadeEls.forEach(el => el.classList.remove('visible'));
+                window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
+                requestAnimationFrame(() => {
+                    fadeEls.forEach(el => el.classList.add('visible'));
+                });
+            } else {
+                window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
             }
         }
-    });
+    }
 });
 
 // ─── Mobile header contact button instant scroll ───
+// The [data-nav-cta] href is updated dynamically by content.js renderNav,
+// so we just read it at click time.
 const mobileContactBtn = document.getElementById('mobileContactBtn');
 if (mobileContactBtn) {
     mobileContactBtn.addEventListener('click', (e) => {
         if (window.innerWidth < 992) {
             e.preventDefault();
-            const target = document.querySelector('#contact');
+            const href = mobileContactBtn.getAttribute('href');
+            const target = href ? document.querySelector(href) : null;
             if (target) {
                 window.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
             }
@@ -218,7 +221,10 @@ if (mobileContactBtn) {
 
 // ─── Dynamic Content Initialization ───
 // Called by content.js after CSV content has been rendered into the DOM
-window.initDynamicContent = function() {
+window.initDynamicContent = function(sectionIdMap) {
+    sectionIdMap = sectionIdMap || {};
+    const contactSelector = sectionIdMap.contact || '#contact';
+
     // Fade-up Animation on Scroll
     const fadeElements = document.querySelectorAll('.fade-up:not(.observed)');
     const observer = new IntersectionObserver((entries) => {
@@ -247,11 +253,13 @@ window.initDynamicContent = function() {
     if (service) {
         checkService(service);
         setTimeout(() => {
-            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            const contactEl = document.querySelector(contactSelector);
+            if (contactEl) contactEl.scrollIntoView({ behavior: 'smooth' });
         }, 100);
     }
 
     // Intercept enquire links so they don't cause a full page reload
+    // Only targets <a> service cards (those without description_full)
     document.querySelectorAll('a.service-card[href*="?service="]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -259,12 +267,119 @@ window.initDynamicContent = function() {
             const svc = url.searchParams.get('service');
             if (svc) {
                 checkService(svc);
-                history.replaceState(null, '', `?service=${svc}#contact`);
+                history.replaceState(null, '', `?service=${svc}${contactSelector}`);
             }
-            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            const contactEl = document.querySelector(contactSelector);
+            if (contactEl) contactEl.scrollIntoView({ behavior: 'smooth' });
         });
     });
 };
+
+// ─── Share Widget ───
+(() => {
+    const shareTrigger = document.getElementById('shareTrigger');
+    const shareTray = document.getElementById('shareTray');
+    const shareMobile = document.querySelector('.share-mobile');
+
+    function closeTray() {
+        if (!shareTray) return;
+        shareTray.classList.remove('open');
+        if (shareTrigger) {
+            shareTrigger.setAttribute('aria-expanded', 'false');
+        }
+        shareTray.setAttribute('aria-hidden', 'true');
+    }
+
+    // Mobile tray toggle
+    if (shareTrigger) {
+        shareTrigger.addEventListener('click', () => {
+            const isOpen = shareTray.classList.toggle('open');
+            shareTrigger.setAttribute('aria-expanded', String(isOpen));
+            shareTray.setAttribute('aria-hidden', String(!isOpen));
+        });
+    }
+
+    // Close tray on outside click
+    document.addEventListener('click', (e) => {
+        if (shareMobile && !shareMobile.contains(e.target)) {
+            closeTray();
+        }
+    });
+
+    // Close tray on scroll
+    window.addEventListener('scroll', closeTray, { passive: true });
+
+    // Close tray after tray action click (for link-based actions)
+    if (shareTray) {
+        shareTray.querySelectorAll('a.share-tray-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTimeout(closeTray, 300);
+            });
+        });
+    }
+
+    // Copy Link — desktop & mobile
+    function handleCopy(btn) {
+        if (!btn) return;
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                const icon = btn.querySelector('i');
+                const label = btn.querySelector('.share-label') || btn.childNodes[btn.childNodes.length - 1];
+                const origIconClass = icon.className;
+
+                // Desktop button
+                if (btn.querySelector('.share-label')) {
+                    const labelEl = btn.querySelector('.share-label');
+                    const origLabel = labelEl.textContent;
+                    icon.className = 'bi bi-check-lg';
+                    labelEl.textContent = 'Copied!';
+                    setTimeout(() => {
+                        icon.className = origIconClass;
+                        labelEl.textContent = origLabel;
+                    }, 2000);
+                } else {
+                    // Mobile button — text node after icon
+                    const origText = btn.textContent;
+                    icon.className = 'bi bi-check-lg';
+                    // Clear text nodes after icon
+                    while (icon.nextSibling) btn.removeChild(icon.nextSibling);
+                    btn.append(' Copied!');
+                    setTimeout(() => {
+                        icon.className = origIconClass;
+                        while (icon.nextSibling) btn.removeChild(icon.nextSibling);
+                        btn.append(' Copy Link');
+                    }, 2000);
+                }
+
+                // Close mobile tray after copy
+                setTimeout(closeTray, 300);
+            });
+        });
+    }
+
+    handleCopy(document.getElementById('shareCopyDesktop'));
+    handleCopy(document.getElementById('shareCopyMobile'));
+
+    // Measure each desktop pill's natural width and set a CSS variable
+    document.querySelectorAll('.share-desktop .share-btn').forEach(btn => {
+        const label = btn.querySelector('.share-label');
+        if (!label) return;
+        // Temporarily make label visible and measurable
+        label.style.opacity = '1';
+        label.style.position = 'absolute';
+        label.style.visibility = 'hidden';
+        label.style.whiteSpace = 'nowrap';
+        const textW = label.offsetWidth;
+        label.style.opacity = '';
+        label.style.position = '';
+        label.style.visibility = '';
+        label.style.whiteSpace = '';
+        // icon (20px) + gap (10px) + text + padding (12px each side)
+        const openW = 20 + 10 + textW + 24 + 4; // +4 breathing room
+        btn.style.setProperty('--share-open-w', openW + 'px');
+    });
+})();
 
 // ─── Form Validation & Submission ───
 const form = document.getElementById('contactForm');
