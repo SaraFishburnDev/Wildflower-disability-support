@@ -278,25 +278,6 @@
       if (twImg) twImg.setAttribute('content', config.seo_image);
     }
 
-    // Gallery CTA
-    var galleryCta = document.getElementById('gallery_cta');
-    if (galleryCta) {
-      if (config.gallery_cta_url) {
-        galleryCta.href = config.gallery_cta_url;
-        galleryCta.style.display = '';
-        var ctaIcon = galleryCta.querySelector('i');
-        if (ctaIcon && config.gallery_cta_icon) {
-          ctaIcon.className = 'bi bi-' + config.gallery_cta_icon;
-        }
-        var ctaSpan = galleryCta.querySelector('span');
-        if (ctaSpan && config.gallery_cta_text) {
-          ctaSpan.textContent = config.gallery_cta_text;
-        }
-      } else {
-        galleryCta.style.display = 'none';
-      }
-    }
-
     // Share widget
     var shareWidget = document.getElementById('shareWidget');
     if (shareWidget) {
@@ -880,6 +861,25 @@
         }
       }
     });
+
+    // Gallery CTA
+    var galleryCta = document.getElementById('gallery_cta');
+    if (galleryCta) {
+      if (config.cta_url) {
+        galleryCta.href = config.cta_url;
+        galleryCta.style.display = '';
+        var ctaIcon = galleryCta.querySelector('i');
+        if (ctaIcon && config.cta_icon) {
+          ctaIcon.className = 'bi ' + normalizeIcon(config.cta_icon);
+        }
+        var ctaSpan = galleryCta.querySelector('span');
+        if (ctaSpan && config.cta_text) {
+          ctaSpan.textContent = config.cta_text;
+        }
+      } else {
+        galleryCta.style.display = 'none';
+      }
+    }
   }
 
   // ─── Contact ───
