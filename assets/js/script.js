@@ -1,5 +1,36 @@
+// ─── Notice Banner Scroll Hide ───
+const noticeBanner = document.getElementById('noticeBanner');
+(() => {
+    let visible = false;
+    window.addEventListener('scroll', () => {
+        if (noticeBanner.hasAttribute('hidden')) return;
+        const y = document.documentElement.scrollTop || document.body.scrollTop;
+        if (y > 30 && visible !== false) {
+            noticeBanner.classList.add('hide');
+            visible = false;
+        } else if (y <= 30 && visible !== true) {
+            noticeBanner.classList.remove('hide');
+            visible = true;
+        }
+    }, { passive: true });
+})();
+
+// ─── Navbar Height Tracking ───
+const navbar = document.querySelector('nav.navbar');
+(() => {
+    const setNavHeight = () => {
+        if (!navbar) return;
+        document.documentElement.style.setProperty('--navbar-height', navbar.clientHeight + 'px');
+    };
+    setNavHeight();
+    if ('ResizeObserver' in window) {
+        new ResizeObserver(setNavHeight).observe(navbar);
+    } else {
+        window.addEventListener('resize', setNavHeight);
+    }
+})();
+
 // ─── Navbar Scroll Effect ───
-const navbar = document.querySelector('.navbar');
 const logoWrapper = document.querySelector('.navbar-logo-wrapper');
 const backToTop = document.getElementById('backToTop');
 

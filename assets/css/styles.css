@@ -28,7 +28,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 90px;
+    scroll-padding-top: var(--navbar-height, 90px);
     font-size: 18px;
 }
 
@@ -38,7 +38,7 @@ body {
     background: var(--clr-warm-bg);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
-    margin-top: 0;
+    margin-top: var(--navbar-height, 0px);
 }
 
 h1, h2, h3, h4, h5 {
@@ -74,12 +74,41 @@ h1, h2, h3, h4, h5 {
     outline-offset: 3px;
 }
 
+/* ─── Notice Banner ─── */
+.notice-banner {
+    width: 100%;
+    background: var(--clr-primary);
+    color: #fff;
+    text-align: center;
+    padding: 8px 16px;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease, opacity 0.35s ease;
+    max-height: 100px;
+    opacity: 1;
+}
+.notice-banner[hidden] { display: none; }
+.notice-banner.hide {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+}
+.notice-banner-text {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
+    padding-left: min(calc(15vw + 20px), 200px);
+    padding-right: min(calc(15vw + 20px), 200px);
+}
+
 /* ─── Navbar ─── */
 .navbar {
     background: #fff;
     padding: 0;
     z-index: 1060;
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: center;
     box-shadow: var(--shadow-sm);
@@ -95,7 +124,7 @@ h1, h2, h3, h4, h5 {
     position: relative;
 }
 .navbar-logo-wrapper {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;

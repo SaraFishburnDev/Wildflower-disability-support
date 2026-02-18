@@ -433,6 +433,15 @@
       }
     }
 
+    // Notice banner
+    var bannerEl = document.getElementById('noticeBanner');
+    var bannerText = document.getElementById('noticeBannerText');
+    if (bannerEl && bannerText && config.notice_text) {
+      bannerText.innerHTML = config.notice_text;
+      if (config.notice_bg) bannerEl.style.background = config.notice_bg;
+      bannerEl.removeAttribute('hidden');
+    }
+
     // Set CTA text and link from config
     if (config.cta_text || config.cta_link) {
       var ctaHref = config.cta_link ? (sectionIdMap[config.cta_link] || '#' + config.cta_link) : null;
