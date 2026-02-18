@@ -1374,7 +1374,7 @@ footer .footer-bottom {
 /* Desktop: left edge, vertically centered, stacked circles */
 .share-desktop {
     position: fixed;
-    left: 16px;
+    left: 0.5rem;
     top: 50%;
     transform: translateY(-50%);
     flex-direction: column;
