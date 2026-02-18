@@ -149,9 +149,14 @@
   }
 
 
+  function normalizeIcon(iconClass) {
+    if (!iconClass) return iconClass;
+    return iconClass.startsWith('bi-') ? iconClass : 'bi-' + iconClass;
+  }
+
   function setIcon(id, iconClass) {
     var el = document.getElementById(id);
-    if (el) el.className = 'bi ' + iconClass;
+    if (el) el.className = 'bi ' + normalizeIcon(iconClass);
   }
 
   function setAttr(id, attr, value) {
@@ -272,7 +277,7 @@
         return (
           '<div class="col-sm-6">' +
             '<div class="value-card d-flex flex-sm-column flex-lg-row align-items-sm-center align-items-lg-start text-sm-center text-lg-left">' +
-              '<div class="value-icon"><i class="bi ' + (val.icon || 'bi-star') + '" aria-hidden="true"></i></div>' +
+              '<div class="value-icon"><i class="bi ' + normalizeIcon(val.icon || 'bi-star') + '" aria-hidden="true"></i></div>' +
               '<div>' +
                 '<h4>' + val.title + '</h4>' +
                 '<p>' + formatText(val.description) + '</p>' +
@@ -300,7 +305,7 @@
         return (
           '<div class="col-md-6 col-lg-4 fade-up delay-' + (i + 1) + '">' +
             '<a href="?service=' + svc.id + '#contact" class="service-card">' +
-              '<div class="service-icon"><i class="bi ' + (svc.icon || 'bi-gear') + '" aria-hidden="true"></i></div>' +
+              '<div class="service-icon"><i class="bi ' + normalizeIcon(svc.icon || 'bi-gear') + '" aria-hidden="true"></i></div>' +
               '<h3>' + svc.title + '</h3>' +
               '<p>' + formatText(svc.description) + '</p>' +
               '<span class="service-link">' +
