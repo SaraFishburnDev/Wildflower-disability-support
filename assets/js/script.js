@@ -136,10 +136,11 @@ const pageFooter = document.querySelector('footer[role="contentinfo"]');
 const heroSection = document.querySelector('.hero');
 
 function openMenu() {
-    const container = navbarIsland.closest('.container');
-    const cs = getComputedStyle(container);
-    const containerWidth = container.offsetWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    menuContainer.style.width = containerWidth + 'px';
+    const pad = 12;
+    const vw = document.documentElement.clientWidth;
+    const islandRect = navbarIsland.getBoundingClientRect();
+    menuContainer.style.width = (vw - pad * 2) + 'px';
+    menuContainer.style.right = -(vw - pad - islandRect.right) + 'px';
     const openHeight = Math.min(menuContainer.scrollHeight, window.innerHeight - 24);
     menuContainer.style.height = openHeight + 'px';
     menuContainer.classList.add('open');
@@ -164,6 +165,7 @@ function openMenu() {
 function closeMenu(returnFocus) {
     menuContainer.style.width = '';
     menuContainer.style.height = '';
+    menuContainer.style.right = '';
     menuContainer.classList.remove('open');
     menuToggleBtn.classList.remove('active');
     menuToggleLabel.textContent = 'MENU';
